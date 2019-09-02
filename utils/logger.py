@@ -21,7 +21,7 @@ class Log:
     def __init__(self):
         log_path = self.log_path[:self.log_path.rfind('/')]
         if not os.path.exists(log_path):
-            os.mkdir(log_path)
+            os.makedirs(log_path)
         self.logger = logging.getLogger()
         if not self.logger.handlers:
             self.logger.setLevel(logging.DEBUG)
