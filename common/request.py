@@ -12,18 +12,14 @@ import sys
 
 sys.path.append('.')
 import requests
-from utils.logger import Log
+from utils.logger import log
 from requests.auth import AuthBase
 from requests.exceptions import RequestException
-from common.readconfig import Config
-
-log = Log().logger
-conf = Config()
+from common.readconfig import conf
 
 
 class PizzAuth(AuthBase):
     """身份令牌"""
-
     def __init__(self, token):
         self.token = token
 
@@ -41,34 +37,19 @@ def get(url, headers=None, params=None, auth=None):
     :return:
     """
     try:
-        response = requests.get(
-            url=url,
-            headers=headers,
-            params=params,
-            auth=auth,
-            timeout=float(conf.timeout)
-        )
+        response = requests.get(url=url,
+                                headers=headers,
+                                params=params,
+                                auth=auth,
+                                timeout=float(conf.timeout))
     except RequestException as e:
-        log.error(format(e))
+        log.exception(format(e))
     except Exception as e:
-        log.error(format(e))
+        log.exception(format(e))
     else:
-        response_dict = {}
-        response_dict['url'] = response.url
-        response_dict['code'] = response.status_code
-        response_dict['headers'] = response.headers
-        response_dict['text'] = response.text
-        response_dict['content'] = response.content
-        try:
-            response_dict['json'] = response.json()
-        except Exception as e:
-            log.warning(format(e))
-            response_dict['json'] = None
-        response_dict['cookies'] = response.cookies
-        response_dict['time_seconds'] = response.elapsed.total_seconds()
-        response_dict['time_consuming'] = response.elapsed.total_seconds() / 1000
-        response_dict['history'] = response.history
-        return response_dict
+        #  response.elapsed.total_seconds()  返回当前接口所用的秒数
+        #  response.elapsed.total_seconds() / 1000  返回当前接口所用的毫秒数
+        return response
 
 
 def post(url, data=None, headers=None, files=None, auth=None):
@@ -86,29 +67,15 @@ def post(url, data=None, headers=None, files=None, auth=None):
                                  headers=headers,
                                  files=files,
                                  auth=auth,
-                                 timeout=float(conf.timeout)
-                                 )
+                                 timeout=float(conf.timeout))
     except RequestException as e:
-        log.error(format(e))
+        log.exception(format(e))
     except Exception as e:
-        log.error(format(e))
+        log.exception(format(e))
     else:
-        response_dict = {}
-        response_dict['url'] = response.url
-        response_dict['code'] = response.status_code
-        response_dict['headers'] = response.headers
-        response_dict['text'] = response.text
-        response_dict['content'] = response.content
-        try:
-            response_dict['json'] = response.json()
-        except Exception as e:
-            log.warning(format(e))
-            response_dict['json'] = None
-        response_dict['cookies'] = response.cookies
-        response_dict['time_seconds'] = response.elapsed.total_seconds()
-        response_dict['time_consuming'] = response.elapsed.total_seconds() / 1000
-        response_dict['history'] = response.history
-        return response_dict
+        return response
+        #  response.elapsed.total_seconds()  返回当前接口所用的秒数
+        #  response.elapsed.total_seconds() / 1000  返回当前接口所用的毫秒数
 
 
 if __name__ == '__main__':

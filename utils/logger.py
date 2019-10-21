@@ -49,10 +49,11 @@ class Log:
 
     @property
     def log_path(self):
-        month = datetime.now().strftime("%Y%mweek%W")
+        month = datetime.now().strftime("%Y%m")
         return os.path.join(root_dir, 'logs', '{}.log'.format(month))
 
 
+log = Log().logger
+
 if __name__ == '__main__':
-    log = Log().logger
     print(log.info("你好"))

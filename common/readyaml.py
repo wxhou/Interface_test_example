@@ -28,7 +28,10 @@ class Route:
         if item_data:
             return item_data
         else:
-            raise TypeError("{} 路径不存在".format(item))
+            raise ValueError("{} 路径不存在".format(item))
+
+
+route = Route()
 
 
 class Payload:
@@ -40,6 +43,7 @@ class Payload:
         return self.data.get(item)
 
 
+payload = Payload()
+
 if __name__ == '__main__':
-    rou = Payload()
-    print(rou.test_001)
+    print(rou.登录)

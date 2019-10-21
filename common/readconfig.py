@@ -13,7 +13,9 @@ sys.path.append('.')
 import os
 import configparser
 
-config_path = os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))), 'data', 'config.ini')
+config_path = os.path.join(
+    os.path.abspath(os.path.dirname(os.path.dirname(__file__))), 'data',
+    'config.ini')
 
 
 class Config:
@@ -73,6 +75,7 @@ class Config:
         return [i[1] for i in self.config.items(Config.CONTTACTS)]
 
 
+conf = Config()
 if __name__ == '__main__':
     a = Config()
     print(a.timeout)
