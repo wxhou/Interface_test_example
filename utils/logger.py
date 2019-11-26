@@ -56,4 +56,4 @@ class Log:
 log = Log().logger
 
 if __name__ == '__main__':
-    print(log.info("你好"))
+    log.info("你好")

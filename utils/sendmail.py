@@ -1,26 +1,18 @@
 #!/usr/bin/env python3
 # coding=utf-8
-'''
-@File    :   request.py
-@Time    :   2019/09/02 10:31:45
-@Author  :   wxhou
-@Version :   1.0
-@Contact :   wxhou@yunjinginc.com
-'''
 import sys
-
 sys.path.append('.')
 import os
 import zmail
-from common.readconfig import Config
+import settings
+from common.readconfig import conf
 
-conf = Config()
-root_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+
 
 
 class Send:
     def __init__(self):
-        self.report_path = os.path.join(root_dir, 'report.html')
+        self.report_path = os.path.join(settings.BASE_DIR, 'report.html')
 
     def __call__(self, *args, **kwargs):
         with open(self.report_path) as f:

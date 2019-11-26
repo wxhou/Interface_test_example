@@ -1,21 +1,12 @@
 #!/usr/bin/env python3
 # coding=utf-8
-'''
-@File    :   request.py
-@Time    :   2019/09/02 10:31:45
-@Author  :   wxhou
-@Version :   1.0
-@Contact :   wxhou@yunjinginc.com
-'''
 import sys
-
 sys.path.append('.')
 import os
+import settings
 import configparser
 
-config_path = os.path.join(
-    os.path.abspath(os.path.dirname(os.path.dirname(__file__))), 'data',
-    'config.ini')
+config_path = os.path.join(settings.BASE_DIR, 'config.ini')
 
 
 class Config:
