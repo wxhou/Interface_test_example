@@ -28,4 +28,4 @@ class TestWeather:
 
 
 if __name__ == "__main__":
-    pytest.main(['-v', 'TestCase/test_api.py'])
+    pytest.main(['TestCase/test_api.py'])

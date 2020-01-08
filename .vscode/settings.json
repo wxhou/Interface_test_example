@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/usr/local/bin/python3",
+    "python.pythonPath": "/Users/hoou/opt/anaconda3/bin/python",
     "python.linting.enabled": true,
     "python.testing.pytestArgs": [
         "TestCase"

@@ -12,9 +12,9 @@ import os
 
 sys.path.append('.')
 import logging
+import settings
 from datetime import datetime
 
-root_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 
 class Log:
@@ -50,7 +50,7 @@ class Log:
     @property
     def log_path(self):
         month = datetime.now().strftime("%Y%m")
-        return os.path.join(root_dir, 'logs', '{}.log'.format(month))
+        return os.path.join(settings.LOG_PATH, '{}.log'.format(month))
 
 
 log = Log().logger

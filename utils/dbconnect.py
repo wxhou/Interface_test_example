@@ -6,12 +6,11 @@ import os
 import sqlite3
 import settings
 
-sqlite_path = os.path.join(settings.BASE_DIR, 'database', 'sqlite3.sqlite')
 
 
 class SQLite:
     def __init__(self):
-        self.con = sqlite3.connect(sqlite_path)
+        self.con = sqlite3.connect(settings.SQLITE_PATH)
         self.cur = self.con.cursor()
 
     def __enter__(self):
