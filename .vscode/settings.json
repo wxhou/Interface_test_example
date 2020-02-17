@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/Users/hoou/opt/anaconda3/bin/python",
+    "python.pythonPath": "D:\\Python3\\python.exe",
     "python.linting.enabled": true,
     "python.testing.pytestArgs": [
         "TestCase"
@@ -7,4 +7,5 @@
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,
     "python.testing.pytestEnabled": true,
+    "python.formatting.provider": "yapf",
 }
