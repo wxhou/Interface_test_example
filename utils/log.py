@@ -15,13 +15,12 @@ import settings
 from datetime import datetime
 
 
-
-class Log:
-    def __init__(self):
+class Logger:
+    def __init__(self, name):
         log_path = self.log_path[:self.log_path.rfind('/')]
         if not os.path.exists(log_path):
             os.makedirs(log_path)
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger(name)
         if not self.logger.handlers:
             self.logger.setLevel(logging.DEBUG)
 
@@ -52,7 +51,7 @@ class Log:
         return os.path.join(settings.LOG_PATH, '{}.log'.format(month))
 
 
-log = Log().logger
+logger = Logger('demo').logger
 
 if __name__ == '__main__':
-    log.info("你好")
+    logger.info("你好")

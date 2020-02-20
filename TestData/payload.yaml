@@ -1,9 +1,0 @@
-test_001:
-  appid: '86854339'
-  appsecret: '1IwzSyP1'
-  version: 'v1'
-
-test_002:
-  appid: '86854339'
-  appsecret: '1IwzSyP1'
-  version: 'v6'

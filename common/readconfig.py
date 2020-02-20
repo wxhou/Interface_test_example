@@ -71,6 +71,6 @@ class Config:
         return [i[1] for i in self.config.items(CONTTACTS)]
 
 
-conf = Config()
+ini = Config()
 if __name__ == '__main__':
-    print(conf.timeout)
+    print(float(ini.timeout))

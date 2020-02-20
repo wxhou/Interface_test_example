@@ -11,6 +11,7 @@ import sys
 sys.path.append('.')
 import pytest
 from py._xmlgen import html
+from common.readconfig import ini
 
 
 @pytest.mark.hookwrapper
@@ -25,7 +26,7 @@ def pytest_runtest_makereport(item):
     if report.when == 'call' or report.when == "setup":
         report.extra = extra
         report.description = str(item.function.__doc__)
-        report.nodeid = report.nodeid.encode("utf-8").decode("unicode_escape")
+        report.nodeid = report.nodeid  # .encode("utf-8").decode("unicode_escape")
 
 
 @pytest.mark.optionalhook
@@ -47,3 +48,20 @@ def pytest_html_results_table_html(report, data):
     if report.passed:
         del data[:]
         data.append(html.div('未捕获日志输出.', class_='empty log'))
+
+
+def pytest_configure(config):
+    """测试报告环境"""
+    config._metadata.clear()
+    config._metadata["项目名称"] = "接口自动化测试演示"
+    config._metadata['接口地址'] = ini.host
+    config._metadata['所属部门'] = '测试部'
+    config._metadata['测试人员'] = '侯伟轩'
+
+
+@pytest.mark.optionalhook
+def pytest_html_results_summary(prefix):
+    """测试报告概要"""
+    pass
+    # prefix.extend([html.p(": ")])
+    # prefix.extend([html.p(": ")])

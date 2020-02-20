@@ -1,80 +1,52 @@
 #!/usr/bin/env python3
-# -*- coding:utf-8 -*-
-'''
-@File : request.py
-@Time : 2020-02-17 16:18:36
-@Author : wxhou 
-@Version : 1.0
-@Contact : 1084502012@qq.com
-'''
-import sys
-sys.path.append('.')
+# -*- coding: utf-8 -*-
 import requests
-from utils.logger import log
-from requests.auth import AuthBase
+import urllib3
 from requests.exceptions import RequestException
-from common.readconfig import conf
+from common.readconfig import ini
+from utils.log import logger
+
+urllib3.disable_warnings()
 
 
-class PizzAuth(AuthBase):
-    """身份令牌"""
-    def __init__(self, token):
-        self.token = token
+class Request:
+    def __init__(self):
+        self.requests = requests
+        self.timeout = float(ini.timeout)
+        self.headers = {
+            'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"}
 
-    def __call__(self, r):
-        r.headers['Authorization'] = 'JWT ' + self.token
-        return r
+    def get(self, *args, **kwargs):
+        """
+        get请求
+        :param args: url headers params auth
+        :param kwargs:
+        """
+        try:
+            response = self.requests.get(*args, **kwargs,
+                                         headers=self.headers,
+                                         timeout=self.timeout)
+            return response
+        except RequestException as e:
+            logger.exception(format(e))
+        except Exception as e:
+            raise e
 
-
-def get(url, headers=None, params=None, auth=None):
-    """
-    GET请求
-    :param url:
-    :param headers:
-    :param params:
-    :return:
-    """
-    try:
-        response = requests.get(url=url,
-                                headers=headers,
-                                params=params,
-                                auth=auth,
-                                timeout=float(conf.timeout))
-    except RequestException as e:
-        log.exception(format(e))
-    except Exception as e:
-        log.exception(format(e))
-    else:
-        #  response.elapsed.total_seconds()  返回当前接口所用的秒数
-        #  response.elapsed.total_seconds() / 1000  返回当前接口所用的毫秒数
-        return response
-
-
-def post(url, data=None, headers=None, files=None, auth=None):
-    """
-    POST请求
-    :param url:
-    :param data:
-    :param headers:
-    :param files: 上传文件
-    :return:
-    """
-    try:
-        response = requests.post(url=url,
-                                 data=data,
-                                 headers=headers,
-                                 files=files,
-                                 auth=auth,
-                                 timeout=float(conf.timeout))
-    except RequestException as e:
-        log.exception(format(e))
-    except Exception as e:
-        log.exception(format(e))
-    else:
-        return response
-        #  response.elapsed.total_seconds()  返回当前接口所用的秒数
-        #  response.elapsed.total_seconds() / 1000  返回当前接口所用的毫秒数
+    def post(self, *args, **kwargs):
+        """
+        POST请求
+        :param args: url data headers files
+        :param kwargs:
+        """
+        try:
+            response = self.requests.post(*args, **kwargs,
+                                          headers=self.headers,
+                                          timeout=self.timeout)
+            return response
+        except RequestException as e:
+            logger.exception(format(e))
+        except Exception as e:
+            raise e
 
 
-if __name__ == '__main__':
-    pass
+request = Request()
