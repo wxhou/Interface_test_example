@@ -9,12 +9,24 @@ from utils.log import logger
 urllib3.disable_warnings()
 
 
+class MyAuth(requests.auth.AuthBase):
+    
+    def __init__(self, token):
+        self.token = token
+
+    def __call__(self,r):
+        r.headers['Authorization'] = 'JWT ' + self.token
+        return r
+
+
 class Request:
     def __init__(self):
         self.requests = requests
         self.timeout = float(ini.timeout)
         self.headers = {
-            'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"}
+            'User-Agent':
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"
+        }
 
     def get(self, *args, **kwargs):
         """
@@ -23,7 +35,8 @@ class Request:
         :param kwargs:
         """
         try:
-            response = self.requests.get(*args, **kwargs,
+            response = self.requests.get(*args,
+                                         **kwargs,
                                          headers=self.headers,
                                          timeout=self.timeout)
             return response
@@ -39,7 +52,8 @@ class Request:
         :param kwargs:
         """
         try:
-            response = self.requests.post(*args, **kwargs,
+            response = self.requests.post(*args,
+                                          **kwargs,
                                           headers=self.headers,
                                           timeout=self.timeout)
             return response
@@ -48,5 +62,30 @@ class Request:
         except Exception as e:
             raise e
 
+    def session(self, url, header=None, cookies_data=None):
+        """
+        会话对象
+        :param url:
+        :param cookies_data:
+        """
+        if isinstance(cookies_data, dict):
+            try:
+                response = self.requests.session()
+                response.get(url=url, headers=header, timeout=self.timeout)
+                cookie = self.requests.cookies.RequestsCookieJar()
+                for i in cookies_data:
+                    cookie.set(i, cookies_data[i])
+                response.cookies.update(cookie)
+                return response
+            except requests.RequestException as e:
+                logger.exception(e)
+            except Exception as e:
+                raise format(e)
+        raise AttributeError("session cookies_data type is ERROR : {}".format(
+            type(cookies_data)))
+
 
 request = Request()
+
+if __name__ == "__main__":
+    pass
