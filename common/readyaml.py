@@ -21,7 +21,8 @@ class ReadRoute:
             self.data = yaml.safe_load(f)
 
     def __call__(self, item):
-        return self.data[item]
+        """获取api_url"""
+        return ini.host + self.data[item]
 
 route = ReadRoute()
 

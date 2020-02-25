@@ -10,11 +10,10 @@ urllib3.disable_warnings()
 
 
 class MyAuth(requests.auth.AuthBase):
-    
     def __init__(self, token):
         self.token = token
 
-    def __call__(self,r):
+    def __call__(self, r):
         r.headers['Authorization'] = 'JWT ' + self.token
         return r
 
@@ -62,7 +61,7 @@ class Request:
         except Exception as e:
             raise e
 
-    def session(self, url, header=None, cookies_data=None):
+    def session(self, url, cookies_data, **kwargs):
         """
         会话对象
         :param url:
@@ -71,7 +70,7 @@ class Request:
         if isinstance(cookies_data, dict):
             try:
                 response = self.requests.session()
-                response.get(url=url, headers=header, timeout=self.timeout)
+                response.get(url, timeout=self.timeout, **kwargs)
                 cookie = self.requests.cookies.RequestsCookieJar()
                 for i in cookies_data:
                     cookie.set(i, cookies_data[i])
@@ -81,7 +80,7 @@ class Request:
                 logger.exception(e)
             except Exception as e:
                 raise format(e)
-        raise AttributeError("session cookies_data type is ERROR : {}".format(
+        raise AttributeError("session cookies_data type is not Dict : {}".format(
             type(cookies_data)))
 
 
