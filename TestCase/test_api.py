@@ -9,7 +9,6 @@
 '''
 import sys
 sys.path.append('.')
-import json
 import pytest
 from common.request import request, logger
 from common.readyaml import route

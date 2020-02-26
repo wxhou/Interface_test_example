@@ -47,7 +47,7 @@ class Request:
     def post(self, *args, **kwargs):
         """
         POST请求
-        :param args: url data headers files
+        :param args: url data json headers files
         :param kwargs:
         """
         try:
