@@ -1,17 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
-'''
-@File : logger.py
-@Time : 2020-02-17 16:17:44
-@Author : wxhou 
-@Version : 1.0
-@Contact : 1084502012@qq.com
-'''
 import sys
 sys.path.append('.')
 import os
 import logging
-import settings
+from config import conf
 from datetime import datetime
 
 
@@ -43,15 +36,16 @@ class Logger:
 
     @property
     def fmt(self):
-        return '%(levelname)s\t%(asctime)s %(filename)s:%(funcName)s:%(lineno)d %(name)s %(message)s'
+        return '%(levelname)s\t%(asctime)s %(filename)s:%(lineno)d %(name)s %(message)s'
 
     @property
     def log_path(self):
         month = datetime.now().strftime("%Y%m")
-        return os.path.join(settings.LOG_PATH, '{}.log'.format(month))
+        return os.path.join(conf.LOG_PATH, '{}.log'.format(month))
 
 
 logger = Logger('demo').logger
 
+__all__ = ['logger']
 if __name__ == '__main__':
     logger.info("你好")

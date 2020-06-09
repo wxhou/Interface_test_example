@@ -1,22 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
-'''
-@File : readconfig.py
-@Time : 2020-02-17 16:18:23
-@Author : wxhou 
-@Version : 1.0
-@Contact : 1084502012@qq.com
-'''
 import sys
 sys.path.append('.')
 import os
-import settings
 import configparser
-
+from config import conf
 
 SERVER = 'SERVER'
 SERVER_VALUE = 'url'
-SERVER_TIMEOUT = 'timeout'
 NAME_MAIL = 'MAIL'
 MAIL_VALUE_HOST = 'emailhost'
 MAIL_VALUE_PORT = 'emailport'
@@ -28,14 +19,14 @@ CONTTACTS = 'CONTTACTS'
 class Config:
     def __init__(self):
         self.config = configparser.RawConfigParser()
-        self.config.read(settings.INI_PATH)
+        self.config.read(conf.INI_PATH)
 
     def get(self, option, name):
         return self.config.get(option, name)
 
     def set(self, option, name, value):
         self.config.set(option, name, value)
-        with open(settings.INI_PATH, 'w') as f:
+        with open(conf.INI_PATH, 'w') as f:
             self.config.write(f)
 
     @property
@@ -45,10 +36,6 @@ class Config:
     @host.setter
     def host(self, value):
         self.set(SERVER, SERVER_VALUE, value)
-
-    @property
-    def timeout(self):
-        return self.get(SERVER, SERVER_TIMEOUT)
 
     @property
     def email(self):
@@ -72,5 +59,8 @@ class Config:
 
 
 ini = Config()
+
+__all__ = ['ini']
 if __name__ == '__main__':
-    print(float(ini.timeout))
+    print(ini.host)
+    print(ini.cont)
