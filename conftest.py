@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
-'''
-@File : conftest.py
-@Time : 2020-02-17 16:19:06
-@Author : wxhou 
-@Version : 1.0
-@Contact : 1084502012@qq.com
-'''
 import sys
 sys.path.append('.')
 import pytest
@@ -28,11 +21,6 @@ def pytest_runtest_makereport(item):
         report.description = str(item.function.__doc__)
         # .encode("utf-8").decode("unicode_escape")
         report.nodeid = report.nodeid
-        xfail = hasattr(report, 'wasxfail')
-        if (report.skipped and xfail) or (report.failed and not xfail):
-            # only add additional html on failure
-            extra.append(pytest_html.extras.html('<div>Additional HTML</div>'))
-        report.extra = extra
 
 
 @pytest.mark.optionalhook
@@ -68,12 +56,11 @@ def pytest_configure(config):
 
 @pytest.mark.optionalhook
 def pytest_html_report_title(report):
-    report.title = "My very own title!"
+    report.title = "天气网测试报告"
 
 
 @pytest.mark.optionalhook
 def pytest_html_results_summary(prefix):
     """测试报告概要"""
-    pass
-    prefix.extend([html.p("演示地址天气网")])
-    prefix.extend([html.p("")])
+    prefix.extend([html.p("所属部门: 测试中心")])
+    prefix.extend([html.p("测试人员: 侯伟轩")])

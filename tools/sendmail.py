@@ -4,12 +4,12 @@ import sys
 sys.path.append('.')
 import os
 import zmail
-from config import conf
+from config.conf import REPORT_PATH
 from common.readconfig import ini
 
 
 def send_mail():
-    with open(conf.REPORT_PATH) as f:
+    with open(REPORT_PATH) as f:
         content_html = f.read()
     try:
         mail = {
@@ -17,7 +17,7 @@ def send_mail():
             'subject': '<%s>接口测试结果' % conf.host,
             'content_html': content_html,
             'attachments': [
-                ini.REPORT_PATH,
+                REPORT_PATH,
             ]
         }
         server = zmail.server(ini.user,

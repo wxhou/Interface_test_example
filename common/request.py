@@ -32,7 +32,7 @@ def get(*args, **kwargs):
                          **kwargs,
                          headers=requests_config['headers'],
                          timeout=requests_config['timeout'])
-        return json.loads(r.text)
+        return r
     except requests.exceptions.RequestException as e:
         logger.exception(format(e))
     except Exception as e:
@@ -50,7 +50,7 @@ def post(*args, **kwargs):
                           **kwargs,
                           headers=requests_config['headers'],
                           timeout=requests_config['timeout'])
-        return json.loads(r.text)
+        return r
     except RequestException as e:
         logger.exception(format(e))
     except Exception as e:
