@@ -19,7 +19,7 @@ class TestWeather:
             'city': cityname
         }
         r = get(route['天气'], params=payload)
-        logger.info(r.json())
+        logger.info(r)
 
     @pytest.mark.parametrize('cityname', ['西安', '宝鸡'])
     def test_002(self, cityname):
@@ -31,7 +31,7 @@ class TestWeather:
             'city': cityname
         }
         r = get(route['天气'], params=payload)
-        logger.info(r.json())
+        logger.info(r)
 
 
 if __name__ == "__main__":

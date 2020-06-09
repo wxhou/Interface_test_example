@@ -26,7 +26,13 @@ def pytest_runtest_makereport(item):
     if report.when == 'call' or report.when == "setup":
         report.extra = extra
         report.description = str(item.function.__doc__)
-        report.nodeid = report.nodeid  # .encode("utf-8").decode("unicode_escape")
+        # .encode("utf-8").decode("unicode_escape")
+        report.nodeid = report.nodeid
+        xfail = hasattr(report, 'wasxfail')
+        if (report.skipped and xfail) or (report.failed and not xfail):
+            # only add additional html on failure
+            extra.append(pytest_html.extras.html('<div>Additional HTML</div>'))
+        report.extra = extra
 
 
 @pytest.mark.optionalhook
@@ -50,6 +56,7 @@ def pytest_html_results_table_html(report, data):
         data.append(html.div('未捕获日志输出.', class_='empty log'))
 
 
+@pytest.mark.optionalhook
 def pytest_configure(config):
     """测试报告环境"""
     config._metadata.clear()
@@ -60,8 +67,13 @@ def pytest_configure(config):
 
 
 @pytest.mark.optionalhook
+def pytest_html_report_title(report):
+    report.title = "My very own title!"
+
+
+@pytest.mark.optionalhook
 def pytest_html_results_summary(prefix):
     """测试报告概要"""
     pass
-    # prefix.extend([html.p(": ")])
-    # prefix.extend([html.p(": ")])
+    prefix.extend([html.p("演示地址天气网")])
+    prefix.extend([html.p("")])

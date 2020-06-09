@@ -3,10 +3,11 @@
 import sys
 
 sys.path.append('.')
+import json
 import requests
 from tools.log import logger
-from .requests_config import requests_config
 from requests.exceptions import RequestException
+from common.requests_config import requests_config
 
 requests.urllib3.disable_warnings()
 
@@ -27,11 +28,11 @@ def get(*args, **kwargs):
     :param kwargs:
     """
     try:
-        response = requests.get(*args,
-                                **kwargs,
-                                headers=requests_config['headers'],
-                                timeout=requests_config['timeout'])
-        return response
+        r = requests.get(*args,
+                         **kwargs,
+                         headers=requests_config['headers'],
+                         timeout=requests_config['timeout'])
+        return json.loads(r.text)
     except requests.exceptions.RequestException as e:
         logger.exception(format(e))
     except Exception as e:
@@ -45,11 +46,11 @@ def post(*args, **kwargs):
     :param kwargs:
     """
     try:
-        response = requests.post(*args,
-                                 **kwargs,
-                                 headers=requests_config['headers'],
-                                 timeout=requests_config['timeout'])
-        return response
+        r = requests.post(*args,
+                          **kwargs,
+                          headers=requests_config['headers'],
+                          timeout=requests_config['timeout'])
+        return json.loads(r.text)
     except RequestException as e:
         logger.exception(format(e))
     except Exception as e:
@@ -79,5 +80,6 @@ def session(url, cookies_data: dict, **kwargs):
 __all__ = ['requests', 'MyAuth', 'get', 'post', 'session']
 
 if __name__ == "__main__":
-    r = get(url='https://www.baidu.com/')
-    print(r.status_code)
+    r = get(url='https://tx.yunjinginc.com/api/page/info/?bdg_id=551')
+    txt = json.loads(r.text)
+    print(txt)
