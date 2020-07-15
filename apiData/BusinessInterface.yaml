@@ -4,7 +4,6 @@
   RequestData:
     data:
       userId: 1500000100070008427
-    verify: False
   expectcode: 200
   regularcheck:
   resultcheck: '"result":"success"'

@@ -9,15 +9,26 @@ class ApiInfo:
     """接口信息"""
 
     def __init__(self):
-        self.info = os.path.join(DATA_DIR, 'testinfo.yaml')
-        self.business_interface = os.path.join(DATA_DIR, 'BusinessInterface.yaml')
-        self.stand_alone_interface = os.path.join(DATA_DIR, 'stand_alone_interface.yaml')
-        with open(self.info, encoding='utf-8') as f:
-            self.info = yaml.safe_load(f)
-        with open(self.business_interface, encoding='utf-8') as f:
-            self.business = yaml.safe_load(f)
-        with open(self.stand_alone_interface, encoding='utf-8') as f:
-            self.stand_alone = yaml.safe_load(f)
+        self.info_path = os.path.join(DATA_DIR, 'testinfo.yaml')
+        self.business_path = os.path.join(DATA_DIR, 'BusinessInterface.yaml')
+        self.stand_alone_path = os.path.join(DATA_DIR, 'stand_alone_interface.yaml')
+
+    @classmethod
+    def load(self, path):
+        with open(path, encoding='utf-8') as f:
+            return yaml.safe_load(f)
+
+    @property
+    def info(self):
+        return self.load(self.info_path)
+
+    @property
+    def business(self):
+        return self.load(self.business_path)
+
+    @property
+    def stand_alone(self):
+        return self.load(self.stand_alone_path)
 
     def test_info(self, value):
         """测试信息"""
@@ -39,4 +50,4 @@ class ApiInfo:
 testinfo = ApiInfo()
 
 if __name__ == '__main__':
-    print(testinfo.info['test_info']['cookies'])
+    print(testinfo.info['test_info'])

@@ -7,7 +7,6 @@
       password: dd636482aca022
       code:
       description: encrypt
-    verify: False
   expectcode: 200
   regularcheck: '[\d]{16}'
   resultcheck: '"result":"success"'
