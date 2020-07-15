@@ -1,0 +1,12 @@
+添加公告:
+  method: post
+  route:
+  RequestData:
+    data:
+      title: 测试公告
+      content: 测试公告
+      creator_id: 3
+      color: '#ffffff'
+  expectcode: 201
+  regularcheck:
+  resultcheck: 测试公告

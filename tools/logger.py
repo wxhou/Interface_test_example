@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
-import sys
-sys.path.append('.')
 import os
 import logging
 from config import conf
@@ -36,7 +34,7 @@ class Logger:
 
     @property
     def fmt(self):
-        return '%(levelname)s\t%(asctime)s %(filename)s:%(lineno)d %(name)s %(message)s'
+        return '%(asctime)s %(levelname)s %(filename)s:%(lineno)d %(message)s'
 
     @property
     def log_path(self):
@@ -44,8 +42,6 @@ class Logger:
         return os.path.join(conf.LOG_PATH, '{}.log'.format(month))
 
 
-logger = Logger('demo').logger
-
-__all__ = ['logger']
+log = Logger('root').logger
 if __name__ == '__main__':
-    logger.info("你好")
+    log.info("你好")

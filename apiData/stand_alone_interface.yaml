@@ -1,0 +1,10 @@
+登录:
+  method: post
+  route:
+  RequestData:
+    data:
+      username:
+      password:
+  expectcode: 200
+  regularcheck: '[A-Za-z0-9-_.]{165}'
+  resultcheck:
