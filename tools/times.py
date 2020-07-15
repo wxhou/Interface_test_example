@@ -61,4 +61,6 @@ def datetime_strftime(fmt="%Y%m"):
 
 
 if __name__ == "__main__":
-    print(timestamp13())
+    a = '"result":"success"'
+    b = '{"result":"success"}'
+    print(a in b)

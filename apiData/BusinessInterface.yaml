@@ -1,12 +1,10 @@
-添加公告:
+登录验证:
   method: post
-  route:
+  route: /loginSuccess/
   RequestData:
     data:
-      title: 测试公告
-      content: 测试公告
-      creator_id: 3
-      color: '#ffffff'
-  expectcode: 201
+      userId: 1500000100070008427
+    verify: False
+  expectcode: 200
   regularcheck:
-  resultcheck: 测试公告
+  resultcheck: '"result":"success"'

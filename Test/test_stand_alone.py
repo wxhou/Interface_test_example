@@ -14,6 +14,7 @@ class TestStandAlone:
     def test_stand_alone_interface(self, case):
         r = req(case['method'], case['route'], **case['RequestData'])
         check_results(r, case)
+        print(r.cookies)
 
 
 if __name__ == "__main__":
