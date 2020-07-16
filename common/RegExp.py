@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import re
-from common.GlobalVariable import var
+from tools.logger import log
+from common.variable import is_vars
 
 
 class RegExp(object):
@@ -12,11 +13,19 @@ class RegExp(object):
 
     @classmethod
     def findall(cls, string):
-        return re.findall(r"\{{(.*?)}\}", string)
+        keys = re.findall(r"\{{(.*?)}\}", string)
+        return keys
 
-    def sub(self, string):
-        for i in self.findall(string):
-            re.sub(r"\{{%s}}" % i, getattr(var, i), string)
+    @classmethod
+    def subs(cls, keys, string):
+        result = None
+        if keys:
+            log.info("提取变量：{}".format(keys))
+            for i in keys:
+                log.info("替换变量：{}".format(i))
+                result = re.sub(r"\{{%s}}" % i, getattr(is_vars, i), string)
+        log.info("替换结果：{}".format(result))
+        return result
 
     def __call__(self, exp, string):
         return re.findall(r'\"%s":"(.*?)"' % exp, string)[0]

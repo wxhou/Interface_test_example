@@ -7,8 +7,8 @@ class Variable(object):
         super(Variable, self).__init__()
 
 
-var = Variable()
+is_vars = Variable()
 
 if __name__ == '__main__':
-    setattr(var, 'name', 'hoou')
-    print(getattr(var, 'name'))
+    setattr(is_vars, 'name', 'hoou')
+    print(getattr(is_vars, 'name'))

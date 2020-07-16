@@ -9,6 +9,10 @@ from requests import Response
 from requests.status_codes import codes
 from requests.exceptions import RequestException
 from common.ApiData import testinfo
+from common.variable import is_vars
+from common.RegExp import regexps
+from core.serialize import deserialization, serialization
+from core.getresult import get_result
 
 urllib3.disable_warnings()
 
@@ -49,11 +53,19 @@ class HttpRequest(object):
         pass
         method = method.upper()
         url = testinfo.test_info('url') + route
+        extractresult = kwargs.pop('extractresult', None)
         try:
             log.info("Request Url: {}".format(url))
             log.info("Request Method: {}".format(method))
             if kwargs:
-                log.info("Request Data: {}".format(kwargs))
+                kwargs_str = serialization(kwargs)
+                is_sub = regexps.findall(kwargs_str)
+                if is_sub:
+                    new_kwargs_str = deserialization(regexps.subs(is_sub, kwargs_str))
+                    log.info("Request Data: {}".format(new_kwargs_str))
+                    kwargs = new_kwargs_str
+                else:
+                    log.info("Request Data: {}".format(kwargs))
             if method == "GET":
                 response = self.r.get(url, **kwargs, headers=self.headers, timeout=self.timeout)
             elif method == "POST":
@@ -76,6 +88,8 @@ class HttpRequest(object):
                 allure.attach(response.text, "响应内容")
             log.info(response)
             log.info("Response Data: {}".format(response.text))
+            if extractresult:
+                get_result(response, extractresult)
             return response
         except RequestException as e:
             log.exception(format(e))

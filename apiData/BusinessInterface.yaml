@@ -3,7 +3,7 @@
   route: /loginSuccess/
   RequestData:
     data:
-      userId: 1500000100070008427
+      userId: "{{data}}"
   expectcode: 200
   regularcheck:
   resultcheck: '"result":"success"'
