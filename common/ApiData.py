@@ -14,7 +14,7 @@ class ApiInfo:
         self.stand_alone_path = os.path.join(DATA_DIR, 'stand_alone_interface.yaml')
 
     @classmethod
-    def load(self, path):
+    def load(cls, path):
         with open(path, encoding='utf-8') as f:
             return yaml.safe_load(f)
 
@@ -36,7 +36,7 @@ class ApiInfo:
 
     def login_info(self, value):
         """登录信息"""
-        return self.stand_alone['登录'][value]
+        return self.stand_alone['登录'].get(value)
 
     def case_info(self, name):
         """用例信息"""

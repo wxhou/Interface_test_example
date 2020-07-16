@@ -12,7 +12,7 @@ class TestStandAlone:
 
     @pytest.mark.parametrize('case', testinfo.stand_alone.values(), ids=testinfo.stand_alone.keys())
     def test_stand_alone_interface(self, case):
-        r = req(case['method'], case['route'], **case['RequestData'])
+        r = req(case['method'], case['route'], case.get('extractresult'), **case['RequestData'])
         check_results(r, case)
         print(r.cookies)
 

@@ -9,7 +9,6 @@ from requests import Response
 from requests.status_codes import codes
 from requests.exceptions import RequestException
 from common.ApiData import testinfo
-from common.variable import is_vars
 from common.RegExp import regexps
 from core.serialize import deserialization, serialization
 from core.getresult import get_result
@@ -27,11 +26,12 @@ class HttpRequest(object):
         self.r = requests.session()
         self.headers = testinfo.test_info('headers')
 
-    def send_request(self, method: str, route: str, **kwargs):
+    def send_request(self, method: str, route: str, extract: str, **kwargs):
         """发送请求
         :param method: 发送方法
         :param route: 发送路径
         optional 可选参数
+        :param extract: 要提取的值
         :param params: 发送参数-"GET"
         :param data: 发送表单-"POST"
         :param json: 发送json-"post"
@@ -53,7 +53,6 @@ class HttpRequest(object):
         pass
         method = method.upper()
         url = testinfo.test_info('url') + route
-        extractresult = kwargs.pop('extractresult', None)
         try:
             log.info("Request Url: {}".format(url))
             log.info("Request Method: {}".format(method))
@@ -64,8 +63,7 @@ class HttpRequest(object):
                     new_kwargs_str = deserialization(regexps.subs(is_sub, kwargs_str))
                     log.info("Request Data: {}".format(new_kwargs_str))
                     kwargs = new_kwargs_str
-                else:
-                    log.info("Request Data: {}".format(kwargs))
+            log.info("Request Data: {}".format(kwargs))
             if method == "GET":
                 response = self.r.get(url, **kwargs, headers=self.headers, timeout=self.timeout)
             elif method == "POST":
@@ -88,8 +86,8 @@ class HttpRequest(object):
                 allure.attach(response.text, "响应内容")
             log.info(response)
             log.info("Response Data: {}".format(response.text))
-            if extractresult:
-                get_result(response, extractresult)
+            if extract:
+                get_result(response, extract)
             return response
         except RequestException as e:
             log.exception(format(e))

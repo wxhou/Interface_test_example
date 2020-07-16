@@ -3,12 +3,23 @@
 
 
 class Variable(object):
+    """全局变量池"""
+
     def __init__(self):
-        super(Variable, self).__init__()
+        super().__init__()
+
+    def set(self, key, value):
+        setattr(self, key, value)
+
+    def get(self, key):
+        return getattr(self, key)
+
+    def has(self, key):
+        return hasattr(self, key)
 
 
 is_vars = Variable()
 
 if __name__ == '__main__':
-    setattr(is_vars, 'name', 'hoou')
-    print(getattr(is_vars, 'name'))
+    is_vars.set('name', 'hoou')
+    print(is_vars.get('name'))

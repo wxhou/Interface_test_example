@@ -8,13 +8,13 @@ from common.variable import is_vars
 from common.RegExp import regexps
 
 
-def get_result(r: Response, extractresult):
+def get_result(r: Response, extract):
     """获取值"""
-    for i in extractresult:
+    for i in extract:
         value = regexps(i, r.text)
         log.info("正则提取结果值:{}={}：".format(i, value))
-        setattr(is_vars, i, value)
-        pytest.assume(hasattr(is_vars, i))
+        is_vars.set(i, value)
+        pytest.assume(is_vars.has(i))
     with allure.step("提取返回结果中的值"):
-        for i in extractresult:
-            allure.attach(name="提取%s" % i, body=getattr(is_vars, i))
+        for i in extract:
+            allure.attach(name="提取%s" % i, body=is_vars.get(i))

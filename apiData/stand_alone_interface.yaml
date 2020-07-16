@@ -2,8 +2,6 @@
   method: post
   route: /weakPwdLogin/?from=web_login
   RequestData:
-    extractresult:
-      - data
     data:
       loginName: 18291900215
       password: dd636482aca022
@@ -12,3 +10,5 @@
   expectcode: 200
   regularcheck: '[\d]{16}'
   resultcheck: '"result":"success"'
+  extractresult:
+    - data

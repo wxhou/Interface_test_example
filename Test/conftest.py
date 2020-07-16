@@ -10,10 +10,11 @@ from core.checkresult import check_results
 @pytest.fixture(scope='session')
 def is_login(request):
     """登录"""
-    r = req(testinfo.login_info('method'), testinfo.login_info('route'), **testinfo.login_info('RequestData'))
+    r = req(testinfo.login_info('method'), testinfo.login_info('route'),
+            testinfo.login_info('extractresult'), **testinfo.login_info('RequestData'))
     result = json.loads(r.text)
     check_results(r, testinfo.stand_info('登录'))
-    if 'Authorization' in req.headers:
+    if 'token' in result:
         req.headers['Authorization'] = "JWT " + result['token']
 
     def fn():

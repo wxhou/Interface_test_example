@@ -11,7 +11,7 @@ from core.checkresult import check_results
 class TestBusiness:
     @pytest.mark.parametrize('case', testinfo.business.values(), ids=testinfo.business.keys())
     def test_business_interface(self, is_login, case):
-        r = req(case['method'], case['route'], **case['RequestData'])
+        r = req(case['method'], case['route'], case.get('extractresult'), **case['RequestData'])
         check_results(r, case)
 
 
