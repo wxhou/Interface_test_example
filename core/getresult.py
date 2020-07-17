@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 import allure
-from tools.logger import log
+from utils.logger import log
 from requests import Response
 from common.variable import is_vars
 from common.RegExp import regexps

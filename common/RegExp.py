@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import re
-from tools.logger import log
+from utils.logger import log
 from common.variable import is_vars
 
 

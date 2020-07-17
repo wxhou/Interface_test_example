@@ -4,7 +4,7 @@ import json
 import allure
 import urllib3
 import requests
-from tools.logger import log
+from utils.logger import log
 from requests import Response
 from requests.status_codes import codes
 from requests.exceptions import RequestException
