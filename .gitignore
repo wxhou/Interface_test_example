@@ -143,3 +143,5 @@ cython_debug/
 allure-report/
 allure-results/
 demo.py
+.idea/
+*.html

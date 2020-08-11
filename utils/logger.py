@@ -8,9 +8,6 @@ from datetime import datetime
 
 class Logger:
     def __init__(self, name):
-        log_path = self.log_path[:self.log_path.rfind('/')]
-        if not os.path.exists(log_path):
-            os.makedirs(log_path)
         self.logger = logging.getLogger(name)
         if not self.logger.handlers:
             self.logger.setLevel(logging.DEBUG)
@@ -38,6 +35,8 @@ class Logger:
 
     @property
     def log_path(self):
+        if not os.path.exists(conf.LOG_PATH):
+            os.makedirs(conf.LOG_PATH)
         month = datetime.now().strftime("%Y%m")
         return os.path.join(conf.LOG_PATH, '{}.log'.format(month))
 

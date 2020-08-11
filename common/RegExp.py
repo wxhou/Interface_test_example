@@ -17,7 +17,6 @@ class RegExp(object):
 
     def subs(self, keys, string):
         result = None
-        log.info("提取变量：{}".format(keys))
         for i in keys:
             log.info("替换变量：{}".format(i))
             result = self.re.sub(r"\{{%s}}" % i, is_vars.get(i), string)
