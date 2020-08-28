@@ -35,10 +35,10 @@ class Logger:
 
     @property
     def log_path(self):
-        if not os.path.exists(conf.LOG_PATH):
-            os.makedirs(conf.LOG_PATH)
+        if not os.path.exists(conf.LOG_DIR):
+            os.makedirs(conf.LOG_DIR)
         month = datetime.now().strftime("%Y%m")
-        return os.path.join(conf.LOG_PATH, '{}.log'.format(month))
+        return os.path.join(conf.LOG_DIR, '{}.log'.format(month))
 
 
 log = Logger('root').logger
