@@ -5,9 +5,6 @@
 class Variable(object):
     """全局变量池"""
 
-    def __init__(self):
-        super().__init__()
-
     def set(self, key, value):
         setattr(self, key, value)
 

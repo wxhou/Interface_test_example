@@ -1,5 +1,7 @@
 source venv/bin/activate
 
+python script/addpth.py
+
 pytest --alluredir allure-results --clean-alluredir
 
 cp config/environment.properties allure-results

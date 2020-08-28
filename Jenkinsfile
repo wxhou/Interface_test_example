@@ -3,12 +3,17 @@ pipeline {
     stages {
         stage("更新代码") {
             steps {
-                git credentialsId: '50578efb-1b51-4422-a94a-ccfc9f4592d7', url: 'https://github.com/wxhou/Interface_test_example.git'            
+                git credentialsId: "dbb5483f-ef6f-43c6-bed7-cf89859170b3", url: "https://github.com/wxhou/Interface_test_example.git"  
+            }
+        }
+        stage("添加环境变量") {
+            steps {
+                sh "python3 script/addpth.py"
             }
         }
         stage("执行测试") {
             steps {
-                sh "pytest --alluredir allure-results --clean-alluredir --junit-xml=allure.xml"
+                sh "python3 -m pytest --alluredir allure-results --clean-alluredir --junit-xml=allure.xml"
             }
         }
     }

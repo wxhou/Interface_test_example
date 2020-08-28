@@ -1,7 +1,9 @@
-pytest --alluredir allure-results --clean-alluredir
+call python script\addpth.py
 
-COPY config\environment.properties allure-results
+call pytest --alluredir allure-results --clean-alluredir
 
-allure generate allure-results -c -o allure-report
+call COPY config\environment.properties allure-results
 
-allure open allure-report
+call allure generate allure-results -c -o allure-report
+
+call allure open allure-report

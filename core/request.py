@@ -8,10 +8,10 @@ from utils.logger import log
 from requests import Response
 from requests.status_codes import codes
 from requests.exceptions import RequestException
-from common.ApiData import testinfo
-from common.RegExp import regexps
 from core.serialize import deserialization, serialization
 from core.getresult import get_result
+from common.ApiData import testinfo
+from common.RegExp import regexps
 
 urllib3.disable_warnings()
 
@@ -61,7 +61,6 @@ class HttpRequest(object):
                 is_sub = regexps.findall(kwargs_str)
                 if is_sub:
                     new_kwargs_str = deserialization(regexps.subs(is_sub, kwargs_str))
-                    log.info("Request Data: {}".format(new_kwargs_str))
                     kwargs = new_kwargs_str
             log.info("Request Data: {}".format(kwargs))
             if method == "GET":

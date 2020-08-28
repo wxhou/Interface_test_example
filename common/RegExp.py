@@ -3,28 +3,31 @@
 import re
 from utils.logger import log
 from common.variable import is_vars
+from core.serialize import is_json_str
 
 
 class RegExp(object):
     """正则相关类"""
 
     def __init__(self):
-        self.re = re
+        self.reg = re.compile
 
     def findall(self, string):
-        keys = self.re.findall(r"\{{(.*?)}\}", string)
-        return keys
-
+        key = self.reg(r"\{{(.*?)}\}").findall(string)
+        return key
+        
     def subs(self, keys, string):
         result = None
         for i in keys:
             log.info("替换变量：{}".format(i))
-            result = self.re.sub(r"\{{%s}}" % i, is_vars.get(i), string)
+            result = self.reg(r"\{{%s}}" % i).sub(is_vars.get(i), string)
         log.info("替换结果：{}".format(result))
         return result
 
     def __call__(self, exp, string):
-        return self.re.findall(r'\"%s":"(.*?)"' % exp, string)[0]
+        if is_json_str(string):
+            return self.reg(r'\"%s":"(.*?)"' % exp).findall(string)[0]
+        return self.reg(r'%s' % exp).findall(string)[0]
 
 
 regexps = RegExp()
