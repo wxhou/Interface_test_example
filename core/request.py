@@ -21,12 +21,18 @@ __all__ = ['req', 'codes']
 class HttpRequest(object):
     """requests方法二次封装"""
 
+    http_method_names = ['get', 'post', 'put',
+                         'delete', 'patch', 'head', 'options']
+
     def __init__(self):
         self.timeout = 30.0
         self.r = requests.session()
         self.headers = testinfo.test_info('headers')
 
-    def send_request(self, method: str, route: str, extract: str, **kwargs):
+    def __call__(self, *args, **kwargs):
+        return self.request(*args, **kwargs)
+
+    def request(self, method: str, route: str, extract: str, **kwargs):
         """发送请求
         :param method: 发送方法
         :param route: 发送路径
@@ -50,7 +56,6 @@ class HttpRequest(object):
         :param cert: 如果是字符串，则为ssl客户端证书文件（.pem）的路径
         :return: request响应
         """
-        pass
         method = method.upper()
         url = testinfo.test_info('url') + route
         try:
@@ -60,26 +65,24 @@ class HttpRequest(object):
                 kwargs_str = serialization(kwargs)
                 is_sub = regexps.findall(kwargs_str)
                 if is_sub:
-                    new_kwargs_str = deserialization(regexps.subs(is_sub, kwargs_str))
+                    new_kwargs_str = deserialization(
+                        regexps.subs(is_sub, kwargs_str))
                     kwargs = new_kwargs_str
             log.info("Request Data: {}".format(kwargs))
-            if method == "GET":
-                response = self.r.get(url, **kwargs, headers=self.headers, timeout=self.timeout)
-            elif method == "POST":
-                response = self.r.post(url, **kwargs, headers=self.headers, timeout=self.timeout)
-            elif method == "PUT":
-                response = self.r.put(url, **kwargs, headers=self.headers, timeout=self.timeout)
-            elif method == "DELETE":
-                response = self.r.delete(url, **kwargs, headers=self.headers, timeout=self.timeout)
-            elif method in ("OPTIONS", "HEAD", "PATCH"):
-                response = self.r.request(method, url, **kwargs, headers=self.headers, timeout=self.timeout)
-            else:
-                raise AttributeError("send request method is ERROR!")
+
+            def dispatch(method, *args, **kwargs):
+                if method.lower() in self.http_method_names:
+                    handler = getattr(self.r, method.lower())
+                    return handler(*args, **kwargs)
+                else:
+                    raise AttributeError("send request method is ERROR!")
+            response = dispatch(method, url, **kwargs)
             with allure.step("%s请求接口" % method):
                 allure.attach(url, name="请求地址")
                 allure.attach(str(response.headers), "请求头")
                 if kwargs:
-                    allure.attach(json.dumps(kwargs, ensure_ascii=False), name="请求参数")
+                    allure.attach(json.dumps(
+                        kwargs, ensure_ascii=False), name="请求参数")
                 allure.attach(str(response.status_code), name="响应状态码")
                 allure.attach(str(elapsed_time(response)), name="响应时间")
                 allure.attach(response.text, "响应内容")
@@ -92,13 +95,6 @@ class HttpRequest(object):
             log.exception(format(e))
         except Exception as e:
             raise e
-
-    def __call__(self, *args, **kwargs):
-        return self.send_request(*args, **kwargs)
-
-    def close_session(self):
-        print("关闭会话")
-        self.r.close()
 
 
 def elapsed_time(func: Response, fixed: str = 's'):
