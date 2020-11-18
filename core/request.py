@@ -4,14 +4,13 @@ import json
 import allure
 import urllib3
 import requests
-from utils.logger import log
-from requests import Response
-from requests.status_codes import codes
+from requests import codes, Response
 from requests.exceptions import RequestException
 from core.serialize import deserialization, serialization
 from core.getresult import get_result
 from common.ApiData import testinfo
 from common.RegExp import regexps
+from utils.logger import log
 
 urllib3.disable_warnings()
 
@@ -21,8 +20,7 @@ __all__ = ['req', 'codes']
 class HttpRequest(object):
     """requests方法二次封装"""
 
-    http_method_names = ['get', 'post', 'put',
-                         'delete', 'patch', 'head', 'options']
+    http_method_names = 'get', 'post', 'put', 'delete', 'patch', 'head', 'options'
 
     def __init__(self):
         self.timeout = 30.0
@@ -97,7 +95,7 @@ class HttpRequest(object):
             raise e
 
 
-def elapsed_time(func: Response, fixed: str = 's'):
+def elapsed_time(r: Response, fixed: str = 's'):
     """
     用时函数
     :param func: response实例
@@ -106,9 +104,9 @@ def elapsed_time(func: Response, fixed: str = 's'):
     """
     try:
         if fixed.lower() == 's':
-            second = func.elapsed.total_seconds()
+            second = r.elapsed.total_seconds()
         elif fixed.lower() == 'ms':
-            second = func.elapsed.total_seconds() * 1000
+            second = r.elapsed.total_seconds() * 1000
         else:
             raise ValueError("{} not in ['s'，'ms']".format(fixed))
         return second
@@ -119,5 +117,4 @@ def elapsed_time(func: Response, fixed: str = 's'):
 
 
 req = HttpRequest()
-if __name__ == '__main__':
-    pass
+

@@ -10,6 +10,7 @@ def deserialization(content: json):
     """
     return json.loads(content)
 
+
 def serialization(content, ensure_ascii=True):
     """
     序列化
@@ -27,7 +28,3 @@ def is_json_str(string):
         except ValueError:
             return False
     return False
-
-
-if __name__ == '__main__':
-    pass

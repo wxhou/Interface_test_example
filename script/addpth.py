@@ -3,7 +3,7 @@
 import os
 import site
 
-BASE_DIR = os.getcwd()
+BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 USER_PTH = os.path.join(site.getsitepackages()[-1], 'requirements.pth')
 
 

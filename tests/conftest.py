@@ -18,7 +18,7 @@ def is_login(request):
         req.headers['Authorization'] = "JWT " + result['token']
 
     def fn():
-        req.close_session()
+        req.r.close()
 
     request.addfinalizer(fn)
 

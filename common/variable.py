@@ -5,18 +5,29 @@
 class Variable(object):
     """全局变量池"""
 
-    def set(self, key, value):
-        setattr(self, key, value)
+    def __init__(self):
+        self.vars = {}
 
-    def get(self, key):
-        return getattr(self, key)
+    def __getitem__(self, key):
+        return self.vars[key]
 
-    def has(self, key):
-        return hasattr(self, key)
+    def __setitem__(self, key, value):
+        self.vars[key] = value
+
+    def __delitem__(self, key):
+        return self.vars.pop(key, None)
+
+    def __len__(self):
+        return len(self.vars)
+
+    def __bool__(self):
+        return bool(self.vars)
+
+    def __contains__(self, key):
+        return key in self.vars
 
 
 is_vars = Variable()
 
 if __name__ == '__main__':
-    is_vars.set('name', 'hoou')
-    print(is_vars.get('name'))
+    print(bool(is_vars))

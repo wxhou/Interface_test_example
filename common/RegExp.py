@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import re
-from utils.logger import log
-from common.variable import is_vars
 from core.serialize import is_json_str
+from common.variable import is_vars
+from utils.logger import log
 
 
 class RegExp(object):
@@ -20,7 +20,7 @@ class RegExp(object):
         result = None
         for i in keys:
             log.info("替换变量：{}".format(i))
-            result = self.reg(r"\{{%s}}" % i).sub(is_vars.get(i), string)
+            result = self.reg(r"\{{%s}}" % i).sub(is_vars[i], string)
         log.info("替换结果：{}".format(result))
         return result
 

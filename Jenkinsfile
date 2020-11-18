@@ -3,12 +3,7 @@ pipeline {
     stages {
         stage("更新代码") {
             steps {
-                git credentialsId: "dbb5483f-ef6f-43c6-bed7-cf89859170b3", url: "https://github.com/wxhou/Interface_test_example.git"  
-            }
-        }
-        stage("添加环境变量") {
-            steps {
-                sh "python3 script/addpth.py"
+                git credentialsId: "6f0f9910-6541-4aaa-abda-b7875e44737b", url: "https://github.com/wxhou/Interface_test_example.git"  
             }
         }
         stage("执行测试") {

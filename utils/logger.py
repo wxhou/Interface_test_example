@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 import os
 import logging
-from config import conf
+from config.conf import CF
 from datetime import datetime
 
 
@@ -35,10 +35,10 @@ class Logger:
 
     @property
     def log_path(self):
-        if not os.path.exists(conf.LOG_DIR):
-            os.makedirs(conf.LOG_DIR)
+        if not os.path.exists(CF.LOG_DIR):
+            os.makedirs(CF.LOG_DIR)
         month = datetime.now().strftime("%Y%m")
-        return os.path.join(conf.LOG_DIR, '{}.log'.format(month))
+        return os.path.join(CF.LOG_DIR, '{}.log'.format(month))
 
 
 log = Logger('root').logger
