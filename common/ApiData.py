@@ -2,16 +2,16 @@
 # -*- coding:utf-8 -*-
 import os
 from ruamel import yaml
-from config.conf import CF
+from config.conf import cm
 
 
 class ApiInfo:
     """接口信息"""
 
     def __init__(self):
-        self.info_path = os.path.join(CF.DATA_DIR, 'testInfo.yaml')
-        self.business_path = os.path.join(CF.DATA_DIR, 'BusinessInterface.yaml')
-        self.stand_alone_path = os.path.join(CF.DATA_DIR, 'stand_alone_interface.yaml')
+        self.info_path = os.path.join(cm.DATA_DIR, 'testInfo.yaml')
+        self.business_path = os.path.join(cm.DATA_DIR, 'BusinessInterface.yaml')
+        self.stand_alone_path = os.path.join(cm.DATA_DIR, 'stand_alone_interface.yaml')
 
     @classmethod
     def load(cls, path):

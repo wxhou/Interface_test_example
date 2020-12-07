@@ -3,8 +3,9 @@
 import re
 from core.serialize import is_json_str
 from common.variable import is_vars
-from utils.logger import log
+from utils.logger import Logger
 
+log = Logger(__name__).logger
 
 class RegExp(object):
     """正则相关类"""

@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
-import os
 import logging
-from config.conf import CF
-from datetime import datetime
+from config.conf import cm
 
 
 class Logger:
@@ -13,7 +11,7 @@ class Logger:
             self.logger.setLevel(logging.DEBUG)
 
             # 创建一个handler，用于写入日志文件
-            fh = logging.FileHandler(self.log_path, encoding='utf-8')
+            fh = logging.FileHandler(cm.log_file, encoding='utf-8')
             fh.setLevel(logging.DEBUG)
 
             # 在控制台输出
@@ -31,16 +29,9 @@ class Logger:
 
     @property
     def fmt(self):
-        return '%(asctime)s %(levelname)s %(filename)s:%(lineno)d %(message)s'
-
-    @property
-    def log_path(self):
-        if not os.path.exists(CF.LOG_DIR):
-            os.makedirs(CF.LOG_DIR)
-        month = datetime.now().strftime("%Y%m")
-        return os.path.join(CF.LOG_DIR, '{}.log'.format(month))
+        return '%(asctime)s %(levelname)s %(name)s-line:%(lineno)d %(message)s'
 
 
-log = Logger('root').logger
 if __name__ == '__main__':
+    log = Logger(__name__).logger
     log.info("你好")

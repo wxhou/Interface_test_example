@@ -4,17 +4,16 @@ import json
 import allure
 import urllib3
 import requests
-from requests import codes, Response
 from requests.exceptions import RequestException
 from core.serialize import deserialization, serialization
 from core.getresult import get_result
 from common.ApiData import testinfo
 from common.RegExp import regexps
-from utils.logger import log
+from utils.logger import Logger
 
 urllib3.disable_warnings()
 
-__all__ = ['req', 'codes']
+log = Logger(__name__).logger
 
 
 class HttpRequest(object):
@@ -23,6 +22,7 @@ class HttpRequest(object):
     http_method_names = 'get', 'post', 'put', 'delete', 'patch', 'head', 'options'
 
     def __init__(self):
+        self.timer = None
         self.timeout = 30.0
         self.r = requests.session()
         self.headers = testinfo.test_info('headers')
@@ -75,15 +75,17 @@ class HttpRequest(object):
                 else:
                     raise AttributeError("send request method is ERROR!")
             response = dispatch(method, url, **kwargs)
-            with allure.step("%s请求接口" % method):
-                allure.attach(url, name="请求地址")
-                allure.attach(str(response.headers), "请求头")
-                if kwargs:
-                    allure.attach(json.dumps(
-                        kwargs, ensure_ascii=False), name="请求参数")
-                allure.attach(str(response.status_code), name="响应状态码")
-                allure.attach(str(elapsed_time(response)), name="响应时间")
-                allure.attach(response.text, "响应内容")
+            self.timer = response.elapsed.total_seconds()  # timer
+            description_html = f"""
+            <font color=red>请求方法:</font>{method}<br/>
+            <font color=red>请求地址:</font>{url}<br/>
+            <font color=red>请求头:</font>{str(response.headers)}<br/>
+            <font color=red>请求参数:</font>{json.dumps(kwargs,
+                                             ensure_ascii=False)}<br/>
+            <font color=red>响应状态码:</font>{str(response.status_code)}<br/>
+            <font color=red>响应时间:</font>{str(self.timer)}<br/>
+            """
+            allure.dynamic.description_html(description_html)
             log.info(response)
             log.info("Response Data: {}".format(response.text))
             if extract:
@@ -95,26 +97,4 @@ class HttpRequest(object):
             raise e
 
 
-def elapsed_time(r: Response, fixed: str = 's'):
-    """
-    用时函数
-    :param func: response实例
-    :param fixed: 1或1000 秒或毫秒
-    :return:
-    """
-    try:
-        if fixed.lower() == 's':
-            second = r.elapsed.total_seconds()
-        elif fixed.lower() == 'ms':
-            second = r.elapsed.total_seconds() * 1000
-        else:
-            raise ValueError("{} not in ['s'，'ms']".format(fixed))
-        return second
-    except RequestException as e:
-        log.exception(e)
-    except Exception as e:
-        raise e
-
-
 req = HttpRequest()
-

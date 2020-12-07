@@ -5,7 +5,9 @@ import allure
 from requests import Response
 from common.variable import is_vars
 from common.RegExp import regexps
-from utils.logger import log
+from utils.logger import Logger
+
+log = Logger(__name__).logger
 
 
 def get_result(r: Response, extract):
