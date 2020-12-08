@@ -5,16 +5,16 @@ import subprocess
 from script.addpth import main as addpth
 
 if 'win' in sys.platform:
-    WIN = False
+    WIN = True
 
 
 def main(shell=True):
     """主函数"""
     addpth()
-    if not WIN:
-        subprocess.run("source venv/bin/activate", shell=shell)
+    if WIN:
+        subprocess.run("venv\Scripts\activate.bat", shell=True)
     else:
-        subprocess.run("venv\Script\activate", shell=True)
+        subprocess.run("source venv/bin/activate", shell=shell)
     subprocess.run(
         "pytest --html=report.html --self-contained-html --alluredir allure-results --clean-alluredir", shell=True)
     if WIN:
