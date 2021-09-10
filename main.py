@@ -4,7 +4,9 @@ import sys
 import subprocess
 from script.addpth import main as addpth
 
-if 'win' in sys.platform:
+if 'darwin' in sys.platform:
+    WIN = False
+else:
     WIN = True
 
 

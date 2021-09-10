@@ -1,9 +1,0 @@
-登录验证:
-  method: post
-  route: /loginSuccess/
-  RequestData:
-    data:
-      userId: "{{data}}"
-  expectcode: 200
-  regularcheck:
-  resultcheck: '"result":"success"'

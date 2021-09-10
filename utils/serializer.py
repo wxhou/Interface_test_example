@@ -3,7 +3,7 @@
 import json
 
 
-def deserialization(content: json):
+def loads(content: json):
     """
     反序列化
         json对象 -> python数据类型
@@ -11,7 +11,7 @@ def deserialization(content: json):
     return json.loads(content)
 
 
-def serialization(content, ensure_ascii=True):
+def dumps(content, ensure_ascii=True):
     """
     序列化
         python数据类型 -> json对象

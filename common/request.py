@@ -3,34 +3,33 @@
 import json
 import allure
 import urllib3
-import requests
+from requests import Session
 from requests.exceptions import RequestException
-from core.serialize import deserialization, serialization
-from core.getresult import get_result
 from common.ApiData import testinfo
 from common.RegExp import regexps
+from common.result import get_result
 from utils.logger import Logger
+from utils.serializer import loads, dumps
+
 
 urllib3.disable_warnings()
 
 log = Logger(__name__).logger
 
 
-class HttpRequest(object):
+class HttpRequest(Session):
     """requests方法二次封装"""
 
-    http_method_names = 'get', 'post', 'put', 'delete', 'patch', 'head', 'options'
-
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(HttpRequest, self).__init__(*args, **kwargs)
         self.timer = None
         self.timeout = 30.0
-        self.r = requests.session()
         self.headers = testinfo.test_info('headers')
 
     def __call__(self, *args, **kwargs):
-        return self.request(*args, **kwargs)
+        return self.send_request(*args, **kwargs)
 
-    def request(self, method: str, route: str, extract: str, **kwargs):
+    def send_request(self, method: str, route: str, extract: str, **kwargs):
         """发送请求
         :param method: 发送方法
         :param route: 发送路径
@@ -63,25 +62,18 @@ class HttpRequest(object):
                 kwargs_str = serialization(kwargs)
                 is_sub = regexps.findall(kwargs_str)
                 if is_sub:
-                    new_kwargs_str = deserialization(
+                    new_kwargs_str = dumps(
                         regexps.subs(is_sub, kwargs_str))
                     kwargs = new_kwargs_str
             log.info("Request Data: {}".format(kwargs))
-
-            def dispatch(method, *args, **kwargs):
-                if method.lower() in self.http_method_names:
-                    handler = getattr(self.r, method.lower())
-                    return handler(*args, **kwargs)
-                else:
-                    raise AttributeError("send request method is ERROR!")
-            response = dispatch(method, url, **kwargs)
+            response = self.dispatch(method, url, **kwargs)
             self.timer = response.elapsed.total_seconds()  # timer
             description_html = f"""
             <font color=red>请求方法:</font>{method}<br/>
             <font color=red>请求地址:</font>{url}<br/>
             <font color=red>请求头:</font>{str(response.headers)}<br/>
             <font color=red>请求参数:</font>{json.dumps(kwargs,
-                                             ensure_ascii=False)}<br/>
+                                                    ensure_ascii=False)}<br/>
             <font color=red>响应状态码:</font>{str(response.status_code)}<br/>
             <font color=red>响应时间:</font>{str(self.timer)}<br/>
             """
@@ -92,9 +84,13 @@ class HttpRequest(object):
                 get_result(response, extract)
             return response
         except RequestException as e:
-            log.exception(format(e))
+            log.error(format(e))
         except Exception as e:
             raise e
+
+    def dispatch(self, method, *args, **kwargs):
+        handler = getattr(self, method.lower())
+        return handler(*args, **kwargs)
 
 
 req = HttpRequest()
