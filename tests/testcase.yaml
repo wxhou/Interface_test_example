@@ -1,6 +1,6 @@
-test_config: # 测试信息
+config: # 测试信息
   description: 登录
-  url: https://www.zhixue.com
+  url: "{{ url }}"
   timeout: 30.0
   headers:
     Accept: application/json, text/javascript, */*; q=0.01
@@ -10,7 +10,9 @@ test_config: # 测试信息
     User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
     cookies: aliyungf_tc=AQAAANNdlkvZ2QYAIb2Q221oiyiSOfhg; tlsysSessionId=cf0a8657-4a02-4a40-8530-ca54889da838; isJump=true; deviceId=27763EA6-04F9-4269-A2D5-59BA0FB1F154; 6e12c6a9-fda1-41b3-82ec-cc496762788d=webim-visitor-69CJM3RYGHMP79F7XV2M; loginUserName=18291900215
     X-Requested-With: XMLHttpRequest
-test_case:
+variable:
+  url: https://www.zhixue.com
+tests:
   test_login:
     description: 登录
     method: post
@@ -21,18 +23,20 @@ test_case:
         password: dd636482aca022
         code:
         description: encrypt
-    expectcode: 200
-    regularcheck: '[\d]{16}'
-    resultcheck: '"result":"success"'
-    extractresult:
+    Validate:
+      expectcode: 200
+      regularcheck: '[\d]{16}'
+      resultcheck: '"result":"success"'
+    Extract:
       - data
   test_login_verify:
-    description: 登录 
+    description: 登录
     method: post
     route: /loginSuccess/
     RequestData:
       data:
         userId: "{{data}}"
-    expectcode: 200
-    regularcheck:
-    resultcheck: '"result":"success"'
+    Validate:
+      expectcode: 200
+      regularcheck:
+      resultcheck: '"result":"success"'

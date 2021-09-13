@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 import os
 from ruamel import yaml
-from config.conf import cm
 
 
 class ApiInfo:

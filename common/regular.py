@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import re
-import loggerging
+import logging
 from common.cache import cache
 from utils.serializer import is_json_str
 
 
-loggerger = loggerging.getloggerger('debug')
+logger = logging.getLogger('debug')
 
 
 class Operation(object):
@@ -27,10 +27,11 @@ class Operation(object):
         logger.info("替换结果：{}".format(result))
         return result
 
-    def __call__(self, exp, string):
+    def get(self, key, string):
+        """获取"""
         if is_json_str(string):
-            return self.re(r'\"%s":"(.*?)"' % exp).findall(string)[0]
-        return self.re(r'%s' % exp).findall(string)[0]
+            return self.re(r'\"%s":"(.*?)"' % key).findall(string)[0]
+        return self.re(r'%s' % key).findall(string)[0]
 
 
 if __name__ == '__main__':

@@ -3,18 +3,18 @@
 import json
 import allure
 import urllib3
+import logging
 from requests import Session
 from requests.exceptions import RequestException
 from common.ApiData import testinfo
 from common.RegExp import regexps
 from common.result import get_result
-from utils.logger import Logger
 from utils.serializer import loads, dumps
 
 
 urllib3.disable_warnings()
 
-log = Logger(__name__).logger
+logger = logging.getLogger('debug')
 
 
 class HttpRequest(Session):
@@ -56,16 +56,14 @@ class HttpRequest(Session):
         method = method.upper()
         url = testinfo.test_info('url') + route
         try:
-            log.info("Request Url: {}".format(url))
-            log.info("Request Method: {}".format(method))
+            logger.info("Request Url: {}".format(url))
+            logger.info("Request Method: {}".format(method))
             if kwargs:
-                kwargs_str = serialization(kwargs)
+                kwargs_str = dumps(kwargs)
                 is_sub = regexps.findall(kwargs_str)
                 if is_sub:
-                    new_kwargs_str = dumps(
-                        regexps.subs(is_sub, kwargs_str))
-                    kwargs = new_kwargs_str
-            log.info("Request Data: {}".format(kwargs))
+                    kwargs = dumps(regexps.subs(is_sub, kwargs_str))
+            logger.info("Request Data: {}".format(kwargs))
             response = self.dispatch(method, url, **kwargs)
             self.timer = response.elapsed.total_seconds()  # timer
             description_html = f"""
@@ -78,13 +76,13 @@ class HttpRequest(Session):
             <font color=red>响应时间:</font>{str(self.timer)}<br/>
             """
             allure.dynamic.description_html(description_html)
-            log.info(response)
-            log.info("Response Data: {}".format(response.text))
+            logger.info(response)
+            logger.info("Response Data: {}".format(response.text))
             if extract:
                 get_result(response, extract)
             return response
         except RequestException as e:
-            log.error(format(e))
+            logger.error(format(e))
         except Exception as e:
             raise e
 
