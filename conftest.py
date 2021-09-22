@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
+import typing as t
 import yaml
 import pytest
 import pytest
+from requests import Response
 from common.cache import cache
+from common.json import dumps, loads
 from common.request import HttpRequest
+from common.regular import findalls, sub_var
 from common.result import get_result, check_results
 from common.exceptions import YamlException
 from utils.logger import logger
@@ -24,11 +28,13 @@ def pytest_collection_modifyitems(items):
 class YamlFile(pytest.File):
     def collect(self):
         raw = yaml.safe_load(self.fspath.open(encoding='utf-8'))
-        if config := raw.pop('config'):
-            for k, v in config.items():
-                cache.set(k, v)
         if variable := raw.get('variable'):
             for k, v in variable.items():
+                cache.set(k, v)
+        if config := raw.get('config'):
+            keys = findalls(dumps(config))
+            config = loads(sub_var({k: cache.get(k) for k in keys}, dumps(config)))
+            for k, v in config.items():
                 cache.set(k, v)
         for name, spec in raw.get('tests').items():
             yield YamlTest.from_parent(self, name=spec.get('description') or name,
@@ -48,11 +54,11 @@ class YamlTest(pytest.Item):
         self.assert_validate(r, self.spec.get('Validate'))
         self.response_extract(r, self.spec.get('Extract'))
 
-    def response_extract(self, r, extract):
+    def response_extract(self, r: Response, extract: t.List):
         if extract:
             get_result(r, extract)
 
-    def assert_validate(self, r, validate):
+    def assert_validate(self, r: Response, validate: t.Dict):
         if validate:
             check_results(r, validate)
 

@@ -4,13 +4,14 @@
 正则相关操作类
 """
 import re
+import typing as t
 from string import Template
 from common.cache import cache
 from common.json import is_json_str
 from utils.logger import logger
 
 
-def findalls(string):
+def findalls(string: t.Text):
     """查找所有"""
     key = re.compile(r"\${(.*?)\}").findall(string)
     res = {k: cache.get(k) for k in key}
@@ -18,7 +19,7 @@ def findalls(string):
     return res
 
 
-def sub_var(keys, string):
+def sub_var(keys: t.Dict, string: t.Text):
     """替换变量"""
     s = Template(string)
     res = s.safe_substitute(keys)
@@ -26,7 +27,7 @@ def sub_var(keys, string):
     return res
 
 
-def get_var(key, raw_str):
+def get_var(key: t.Text, raw_str: t.Text):
     """获取变量"""
     if is_json_str(raw_str):
         return re.compile(r'\"%s":"(.*?)"' % key).findall(raw_str)[0]
