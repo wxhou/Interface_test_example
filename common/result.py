@@ -4,7 +4,7 @@ import pytest
 import allure
 from requests import Response
 from common.cache import cache
-from common.regular import re, get_var, findalls
+from common.regular import re, get_var
 from utils.logger import logger
 
 
@@ -29,7 +29,7 @@ def check_results(r: Response, validate: t.Dict) -> None:
         with allure.step("校验返回响应码"):
             allure.attach(name='预期响应码', body=str(expectcode))
             allure.attach(name='实际响应码', body=str(r.status_code))
-    pytest.assume(expectcode == r.status_code)
+        pytest.assume(expectcode == r.status_code)
     if resultcheck:
         with allure.step("校验响应预期值"):
             allure.attach(name='预期值', body=str(resultcheck))

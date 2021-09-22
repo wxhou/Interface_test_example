@@ -26,6 +26,7 @@ def pytest_collection_modifyitems(items):
 
 
 class YamlFile(pytest.File):
+
     def collect(self):
         raw = yaml.safe_load(self.fspath.open(encoding='utf-8'))
         if variable := raw.get('variable'):
@@ -33,12 +34,15 @@ class YamlFile(pytest.File):
                 cache.set(k, v)
         if config := raw.get('config'):
             keys = findalls(dumps(config))
-            config = loads(sub_var({k: cache.get(k) for k in keys}, dumps(config)))
+            config = loads(sub_var({k: cache.get(k)
+                           for k in keys}, dumps(config)))
             for k, v in config.items():
                 cache.set(k, v)
-        for name, spec in raw.get('tests').items():
-            yield YamlTest.from_parent(self, name=spec.get('description') or name,
-                                       spec=spec)
+        if tests := raw.get('tests'):
+            for name, spec in tests.items():
+                yield YamlTest.from_parent(self,
+                                           name=spec.get('description') or name,
+                                           spec=spec)
 
 
 class YamlTest(pytest.Item):
