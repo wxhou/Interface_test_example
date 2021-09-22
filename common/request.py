@@ -4,7 +4,7 @@ requests二次封装类
 import typing as t
 import allure
 import urllib3
-from requests import Session
+from requests import Session, Response
 from requests.exceptions import RequestException
 from common.cache import cache
 from common.json import json, loads, dumps
@@ -17,11 +17,11 @@ urllib3.disable_warnings()
 class HttpRequest(Session):
     """requests方法二次封装"""
 
-    def __init__(self, *args: t.Union[t.Set, t.List], **kwargs: t.Dict):
+    def __init__(self, *args: t.Union[t.Set, t.List], **kwargs: t.Dict[t.Text, t.Any]):
         super(HttpRequest, self).__init__()
         self.exception = kwargs.get("exception", Exception)
 
-    def send_request(self, **kwargs: t.Dict):
+    def send_request(self, **kwargs: t.Dict[t.Text, t.Any]) -> Response:
         """发送请求
         :param method: 发送方法
         :param route: 发送路径
@@ -74,7 +74,7 @@ class HttpRequest(Session):
         except self.exception as e:
             raise e
 
-    def dispatch(self, method: t.Text, *args: t.Union[t.List, t.Set], **kwargs: t.Dict):
+    def dispatch(self, method: t.Text, *args: t.Union[t.List, t.Tuple], **kwargs: t.Dict) -> Response:
         """请求分发"""
         handler = getattr(self, method.lower())
         return handler(*args, **kwargs)

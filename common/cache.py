@@ -16,25 +16,25 @@ class CachePool(object):
     def __setitem__(self, key: t.Text, value: t.Any):
         self.pool[key] = value
 
-    def __delitem__(self, key: t.Text):
+    def __delitem__(self, key: t.Text) -> t.Any:
         return self.pool.pop(key, None)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.pool)
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self.pool)
 
-    def __contains__(self, key: t.Text):
+    def __contains__(self, key: t.Text) -> bool:
         return key in self.pool
 
-    def get(self, key: t.Text):
+    def get(self, key: t.Text) -> t.Any:
         return self.pool.get(key)
 
-    def set(self, key: t.Text, value: t.Any=None):
+    def set(self, key: t.Text, value: t.Any=None) -> None:
         self.pool.setdefault(key, value)
 
-    def has(self, key: t.Text):
+    def has(self, key: t.Text) -> bool:
         return key in self.pool
 
 

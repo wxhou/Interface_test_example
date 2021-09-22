@@ -8,7 +8,7 @@ from common.regular import re, get_var, findalls
 from utils.logger import logger
 
 
-def get_result(r: Response, extract: t.List):
+def get_result(r: Response, extract: t.List) -> None:
     """获取值"""
     for key in extract:
         value = get_var(key, r.text)
@@ -20,7 +20,7 @@ def get_result(r: Response, extract: t.List):
             allure.attach(name="提取%s" % key, body=cache.get(key))
 
 
-def check_results(r: Response, validate: t.Dict):
+def check_results(r: Response, validate: t.Dict) -> None:
     """检查运行结果"""
     expectcode = validate.get('expectcode')
     resultcheck = validate.get('resultcheck')

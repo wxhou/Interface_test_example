@@ -5,7 +5,7 @@ import json
 import typing as t
 
 
-def loads(content: t.Text):
+def loads(content: t.Text) -> t.Any:
     """
     反序列化
         json对象 -> python数据类型
@@ -13,7 +13,7 @@ def loads(content: t.Text):
     return json.loads(content)
 
 
-def dumps(content: t.Union[t.Dict, t.List], ensure_ascii: bool=True):
+def dumps(content: t.Union[t.Dict, t.List], ensure_ascii: bool=True) -> t.Text:
     """
     序列化
         python数据类型 -> json对象
@@ -21,7 +21,7 @@ def dumps(content: t.Union[t.Dict, t.List], ensure_ascii: bool=True):
     return json.dumps(content, ensure_ascii=ensure_ascii)
 
 
-def is_json_str(string: t.Text):
+def is_json_str(string: t.Text) -> bool:
     """验证是否为json字符串"""
     try:
         json.loads(string)
