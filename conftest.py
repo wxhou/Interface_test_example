@@ -1,25 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 import os
-import json
 import yaml
 import pytest
 import pytest
-import logging
-from string import Template
 from common.cache import cache
 from common.request import HttpRequest
 from common.result import get_result, check_results
+from common.exceptions import YamlException
 from utils.logger import logger
 
 
 # def pytest_configure(config):
-    # config.option.log_file = os.path.join(basedir, 'logs', 'server.log')
+# config.option.log_file = os.path.join(basedir, 'logs', 'server.log')
 
 
 def pytest_collect_file(parent, path):
     if path.ext in (".yaml", ".yml") and path.basename.startswith("test"):
-        logger.debug("pytest_collect_file is: {} {}".format(parent, path))
         return YamlFile.from_parent(parent, fspath=path)
 
 
@@ -39,10 +36,10 @@ class YamlFile(pytest.File):
         if variable := raw.get('variable'):
             for k, v in variable.items():
                 cache.set(k, v)
-        logger.debug("yaml data is: {}".format(raw))
         for name, spec in raw.get('tests').items():
-            yield YamlTest.from_parent(self, name=spec.get('description') or name, 
-                                       spec=spec)
+            yield YamlTest.from_parent(self, name=spec.get('description') or name,
+                                    spec=spec)
+
 
 class YamlTest(pytest.Item):
     def __init__(self, name, parent, spec):
@@ -52,7 +49,7 @@ class YamlTest(pytest.Item):
 
     def runtest(self):
         # Some custom test execution (dumb example follows).
-        request = HttpRequest().initial(exception=YamlException, logger=logger)
+        request = HttpRequest(exception=(Exception, YamlException))
         r = request.send_request(**self.spec)
         self.assert_validate(r, self.spec.get('Validate'))
         self.response_extract(r, self.spec.get('Extract'))
@@ -79,10 +76,6 @@ class YamlTest(pytest.Item):
 
     def reportinfo(self):
         return self.fspath, 0, f"usecase: {self.description}"
-
-
-class YamlException(Exception):
-    """Custom exception for error reporting."""
 
 
 if __name__ == '__main__':

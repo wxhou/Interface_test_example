@@ -7,7 +7,6 @@ from requests.exceptions import RequestException
 from common.cache import cache
 from common.json import json, loads, dumps
 from common.regular import get_var, sub_var, findalls
-from common.result import get_result
 from utils.logger import logger
 
 urllib3.disable_warnings()
@@ -16,9 +15,9 @@ urllib3.disable_warnings()
 class HttpRequest(Session):
     """requests方法二次封装"""
 
-    def initial(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        super(HttpRequest, self).__init__()
         self.exception = kwargs.get("exception", Exception)
-        return self
 
     def send_request(self, **kwargs):
         """发送请求
