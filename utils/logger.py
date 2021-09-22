@@ -1,5 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding:utf-8 -*-
+"""
+日志类
+"""
 import os
 import logging
 from logging.handlers import RotatingFileHandler

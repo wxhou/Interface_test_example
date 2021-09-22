@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding:utf-8 -*-
-
+"""
+缓存类
+"""
 
 class CachePool(object):
     """全局变量池"""

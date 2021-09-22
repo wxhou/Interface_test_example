@@ -1,5 +1,5 @@
 config: # 测试信息
-  url: "https://www.zhixue.com"
+  baseurl: "https://www.zhixue.com"
   timeout: 30.0
   headers:
     Accept: application/json, text/javascript, */*; q=0.01
@@ -10,7 +10,7 @@ config: # 测试信息
     cookies: aliyungf_tc=AQAAANNdlkvZ2QYAIb2Q221oiyiSOfhg; tlsysSessionId=cf0a8657-4a02-4a40-8530-ca54889da838; isJump=true; deviceId=27763EA6-04F9-4269-A2D5-59BA0FB1F154; 6e12c6a9-fda1-41b3-82ec-cc496762788d=webim-visitor-69CJM3RYGHMP79F7XV2M; loginUserName=18291900215
     X-Requested-With: XMLHttpRequest
 variable:
-  test : none
+  none : none
 tests:
   test_login:
     description: "登录"
@@ -34,7 +34,7 @@ tests:
     route: /loginSuccess/
     RequestData:
       data:
-        userId: "{{data}}"
+        userId: "${data}"
     Validate:
       expectcode: 200
       regularcheck:

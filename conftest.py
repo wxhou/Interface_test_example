@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
-import os
 import yaml
 import pytest
 import pytest
@@ -9,10 +8,6 @@ from common.request import HttpRequest
 from common.result import get_result, check_results
 from common.exceptions import YamlException
 from utils.logger import logger
-
-
-# def pytest_configure(config):
-# config.option.log_file = os.path.join(basedir, 'logs', 'server.log')
 
 
 def pytest_collect_file(parent, path):
@@ -30,15 +25,14 @@ class YamlFile(pytest.File):
     def collect(self):
         raw = yaml.safe_load(self.fspath.open(encoding='utf-8'))
         if config := raw.pop('config'):
-            cache.set('baseurl', config.get('url', ''))
-            cache.set('timeout', config.get('timeout', 30.0))
-            cache.set('headers', config.get('headers'))
+            for k, v in config.items():
+                cache.set(k, v)
         if variable := raw.get('variable'):
             for k, v in variable.items():
                 cache.set(k, v)
         for name, spec in raw.get('tests').items():
             yield YamlTest.from_parent(self, name=spec.get('description') or name,
-                                    spec=spec)
+                                       spec=spec)
 
 
 class YamlTest(pytest.Item):

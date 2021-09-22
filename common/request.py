@@ -1,5 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding:utf-8 -*-
+"""
+requests二次封装类
+"""
 import allure
 import urllib3
 from requests import Session
