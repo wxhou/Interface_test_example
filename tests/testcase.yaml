@@ -13,7 +13,7 @@ variable:
   test : none
 tests:
   test_login:
-    description: 登录
+    description: "登录"
     method: post
     route: /weakPwdLogin/?from=web_login
     RequestData:
@@ -29,7 +29,7 @@ tests:
     Extract:
       - data
   test_login_verify:
-    description: 验证登录
+    description: "验证登录"
     method: post
     route: /loginSuccess/
     RequestData:

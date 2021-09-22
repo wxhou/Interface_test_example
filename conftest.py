@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
+import os
 import json
 import yaml
 import pytest
@@ -9,9 +10,11 @@ from string import Template
 from common.cache import cache
 from common.request import HttpRequest
 from common.result import get_result, check_results
+from utils.logger import logger
 
 
-logger = logging.getLogger('debug')
+# def pytest_configure(config):
+    # config.option.log_file = os.path.join(basedir, 'logs', 'server.log')
 
 
 def pytest_collect_file(parent, path):
@@ -20,14 +23,10 @@ def pytest_collect_file(parent, path):
         return YamlFile.from_parent(parent, fspath=path)
 
 
-# def pytest_collection_modifyitems(items):
-#     """
-#     测试用例收集完成时，将收集到的item的name和nodeid的中文显示在控制台上
-#     :return:
-#     """
-#     for item in items:
-#         item.name = item.name.encode("utf-8").decode("unicode_escape")
-#         item._nodeid = item.nodeid.encode("utf-8").decode("unicode_escape")
+def pytest_collection_modifyitems(items):
+    for item in items:
+        item.name = item.name.encode('unicode_escape').decode('utf-8')
+        item._nodeid = item.nodeid.encode('unicode_escape').decode('utf-8')
 
 
 class YamlFile(pytest.File):
@@ -42,8 +41,8 @@ class YamlFile(pytest.File):
                 cache.set(k, v)
         logger.debug("yaml data is: {}".format(raw))
         for name, spec in raw.get('tests').items():
-            yield YamlTest.from_parent(self, name=name, spec=spec)
-
+            yield YamlTest.from_parent(self, name=spec.get('description') or name, 
+                                       spec=spec)
 
 class YamlTest(pytest.Item):
     def __init__(self, name, parent, spec):
@@ -53,10 +52,8 @@ class YamlTest(pytest.Item):
 
     def runtest(self):
         # Some custom test execution (dumb example follows).
-        logger.debug("spec is： {}".format(self.spec))
         request = HttpRequest().initial(exception=YamlException, logger=logger)
         r = request.send_request(**self.spec)
-        logger.info("results is: {}".format(r))
         self.assert_validate(r, self.spec.get('Validate'))
         self.response_extract(r, self.spec.get('Extract'))
 
@@ -71,7 +68,7 @@ class YamlTest(pytest.Item):
     def repr_failure(self, excinfo):
         """Called when self.runtest() raises an exception."""
         if isinstance(excinfo.value, YamlException):
-            logger.critical(excinfo)
+            logger.critical(format(excinfo))
             return "\n".join(
                 [
                     "usecase execution failed",

@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
-# -*- coding:utf-8 -*-
 import json
 
 
-def loads(content: json):
+def loads(content: str):
     """
     反序列化
         json对象 -> python数据类型
@@ -19,12 +17,10 @@ def dumps(content, ensure_ascii=True):
     return json.dumps(content, ensure_ascii=ensure_ascii)
 
 
-def is_json_str(string):
+def is_json_str(string: str):
     """验证是否为json字符串"""
-    if isinstance(string, str):
-        try:
-            json.loads(string)
-            return True
-        except ValueError:
-            return False
-    return False
+    try:
+        json.loads(string)
+        return True
+    except:
+        return False

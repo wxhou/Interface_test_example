@@ -6,10 +6,8 @@
 import re
 import logging
 from common.cache import cache
-from utils.serializer import is_json_str
-
-
-logger = logging.getLogger('debug')
+from common.json import is_json_str
+from utils.logger import logger
 
 
 def findalls(string):
@@ -33,7 +31,3 @@ def get_var(key, raw_str):
     if is_json_str(raw_str):
         return re.compile(r'\"%s":"(.*?)"' % key).findall(raw_str)[0]
     return re.compile(r'%s' % key).findall(raw_str)[0]
-
-
-if __name__ == '__main__':
-    pass

@@ -3,9 +3,7 @@
 import os
 import logging
 from logging.handlers import RotatingFileHandler
-
-
-basedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from main import basedir
 
 
 def init_logger():
@@ -19,7 +17,7 @@ def init_logger():
     logger_debug = logging.getLogger('apitest')
     handler_debug = RotatingFileHandler(debug_file,
                                         encoding='utf-8',
-                                        maxBytes=20 * 1024,
+                                        maxBytes=20 * 1024 * 1024,
                                         backupCount=10)
     handler_debug.setFormatter(logger_formatter)
     logger_debug.setLevel(logging.DEBUG)
@@ -36,5 +34,7 @@ logger = init_logger()
 
 if __name__ == '__main__':
     logger.debug("debug")
-    logger.info("")
-    logger.error("你好， 有错误")
+    logger.info("info")
+    logger.warning('warning')
+    logger.error("error")
+    logger.critical('critical')

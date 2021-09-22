@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
-import json
 import allure
 import urllib3
 from requests import Session
 from requests.exceptions import RequestException
 from common.cache import cache
+from common.json import json, loads, dumps
 from common.regular import get_var, sub_var, findalls
 from common.result import get_result
-from utils.serializer import loads, dumps
-
+from utils.logger import logger
 
 urllib3.disable_warnings()
 
@@ -19,8 +18,6 @@ class HttpRequest(Session):
 
     def initial(self, *args, **kwargs):
         self.exception = kwargs.get("exception", Exception)
-        self.logger = kwargs.get("logger")
-        self.logger.info("HttpRequest")
         return self
 
     def send_request(self, **kwargs):
@@ -48,15 +45,15 @@ class HttpRequest(Session):
         :return: request响应
         """
         kwargs_str = dumps(kwargs)
-        self.logger.info("request data: {}".format(kwargs))
+        logger.info("request data: {}".format(kwargs))
         method = kwargs.get('method', 'GET').upper()
         url = cache.get('baseurl') + kwargs.get('route')
         try:
-            self.logger.info("Request Url: {}".format(url))
-            self.logger.info("Request Method: {}".format(method))
+            logger.info("Request Url: {}".format(url))
+            logger.info("Request Method: {}".format(method))
             if is_sub := findalls(kwargs_str):
                 kwargs = loads(sub_var(is_sub, kwargs_str))
-            self.logger.info("Request Data: {}".format(kwargs))
+            logger.info("Request Data: {}".format(kwargs))
             response = self.dispatch(method, url, headers=cache.get('headers'),
                                      **kwargs.get('RequestData'), timeout=cache.get('timeout'))
             response.timer = response.elapsed.total_seconds()
@@ -64,17 +61,15 @@ class HttpRequest(Session):
             <font color=red>请求方法:</font>{method}<br/>
             <font color=red>请求地址:</font>{url}<br/>
             <font color=red>请求头:</font>{str(response.headers)}<br/>
-            <font color=red>请求参数:</font>{json.dumps(kwargs,
-                                                    ensure_ascii=False)}<br/>
+            <font color=red>请求参数:</font>{json.dumps(kwargs, ensure_ascii=False)}<br/>
             <font color=red>响应状态码:</font>{str(response.status_code)}<br/>
             <font color=red>响应时间:</font>{str(response.timer)}<br/>
             """
             allure.dynamic.description_html(description_html)
-            self.logger.info(response)
-            self.logger.info("Response Data: {}".format(response.text))
+            logger.info("Request Result: {}".format(response))
             return response
         except RequestException as e:
-            self.logger.error(format(e))
+            logger.error(format(e))
         except self.exception as e:
             raise e
 

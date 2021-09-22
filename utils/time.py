@@ -61,6 +61,4 @@ def dt_strftime(fmt="%Y%m"):
 
 
 if __name__ == "__main__":
-    a = '"result":"success"'
-    b = '{"result":"success"}'
-    print(a in b)
+    print(timestamp())

@@ -7,9 +7,7 @@ import allure
 from requests import Response
 from common.cache import cache
 from common.regular import re, get_var, findalls
-
-
-logger = logging.getLogger('debug')
+from utils.logger import logger
 
 
 def get_result(r: Response, extract):
@@ -42,5 +40,6 @@ def check_results(r: Response, validate: dict):
     if regularcheck:
         with allure.step("正则校验返回结果"):
             allure.attach(name='预期正则', body=regularcheck)
-            allure.attach(name='响应值', body=str(re.findall(regularcheck, r.text)))
+            allure.attach(name='响应值', body=str(
+                re.findall(regularcheck, r.text)))
         pytest.assume(re.findall(regularcheck, r.text))
