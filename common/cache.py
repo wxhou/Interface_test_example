@@ -26,8 +26,15 @@ class CachePool(object):
     def __contains__(self, key):
         return key in self.pool
 
-    def __len__(self):
-        return len(self.pool)
+    def get(self, key):
+        return self.pool.get(key)
+
+    def set(self, key, value=None):
+        self.pool.setdefault(key, value)
+
+    def has(self, key):
+        return key in self.pool
+
 
 
 cache = CachePool()

@@ -52,7 +52,7 @@ def timestamp13():
                      str(datetime.datetime.now().microsecond))
 
 
-def datetime_strftime(fmt="%Y%m"):
+def dt_strftime(fmt="%Y%m"):
     """
     格式化datetime时间
     :param fmt "%Y%m%d%H%M%S"

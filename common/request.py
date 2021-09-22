@@ -3,33 +3,27 @@
 import json
 import allure
 import urllib3
-import logging
 from requests import Session
 from requests.exceptions import RequestException
-from common.ApiData import testinfo
-from common.RegExp import regexps
+from common.cache import cache
+from common.regular import get_var, sub_var, findalls
 from common.result import get_result
 from utils.serializer import loads, dumps
 
 
 urllib3.disable_warnings()
 
-logger = logging.getLogger('debug')
-
 
 class HttpRequest(Session):
     """requests方法二次封装"""
 
-    def __init__(self, *args, **kwargs):
-        super(HttpRequest, self).__init__(*args, **kwargs)
-        self.timer = None
-        self.timeout = 30.0
-        self.headers = testinfo.test_info('headers')
+    def initial(self, *args, **kwargs):
+        self.exception = kwargs.get("exception", Exception)
+        self.logger = kwargs.get("logger")
+        self.logger.info("HttpRequest")
+        return self
 
-    def __call__(self, *args, **kwargs):
-        return self.send_request(*args, **kwargs)
-
-    def send_request(self, method: str, route: str, extract: str, **kwargs):
+    def send_request(self, **kwargs):
         """发送请求
         :param method: 发送方法
         :param route: 发送路径
@@ -53,19 +47,19 @@ class HttpRequest(Session):
         :param cert: 如果是字符串，则为ssl客户端证书文件（.pem）的路径
         :return: request响应
         """
-        method = method.upper()
-        url = testinfo.test_info('url') + route
+        kwargs_str = dumps(kwargs)
+        self.logger.info("request data: {}".format(kwargs))
+        method = kwargs.get('method', 'GET').upper()
+        url = cache.get('baseurl') + kwargs.get('route')
         try:
-            logger.info("Request Url: {}".format(url))
-            logger.info("Request Method: {}".format(method))
-            if kwargs:
-                kwargs_str = dumps(kwargs)
-                is_sub = regexps.findall(kwargs_str)
-                if is_sub:
-                    kwargs = dumps(regexps.subs(is_sub, kwargs_str))
-            logger.info("Request Data: {}".format(kwargs))
-            response = self.dispatch(method, url, **kwargs)
-            self.timer = response.elapsed.total_seconds()  # timer
+            self.logger.info("Request Url: {}".format(url))
+            self.logger.info("Request Method: {}".format(method))
+            if is_sub := findalls(kwargs_str):
+                kwargs = loads(sub_var(is_sub, kwargs_str))
+            self.logger.info("Request Data: {}".format(kwargs))
+            response = self.dispatch(method, url, headers=cache.get('headers'),
+                                     **kwargs.get('RequestData'), timeout=cache.get('timeout'))
+            response.timer = response.elapsed.total_seconds()
             description_html = f"""
             <font color=red>请求方法:</font>{method}<br/>
             <font color=red>请求地址:</font>{url}<br/>
@@ -73,22 +67,18 @@ class HttpRequest(Session):
             <font color=red>请求参数:</font>{json.dumps(kwargs,
                                                     ensure_ascii=False)}<br/>
             <font color=red>响应状态码:</font>{str(response.status_code)}<br/>
-            <font color=red>响应时间:</font>{str(self.timer)}<br/>
+            <font color=red>响应时间:</font>{str(response.timer)}<br/>
             """
             allure.dynamic.description_html(description_html)
-            logger.info(response)
-            logger.info("Response Data: {}".format(response.text))
-            if extract:
-                get_result(response, extract)
+            self.logger.info(response)
+            self.logger.info("Response Data: {}".format(response.text))
             return response
         except RequestException as e:
-            logger.error(format(e))
-        except Exception as e:
+            self.logger.error(format(e))
+        except self.exception as e:
             raise e
 
     def dispatch(self, method, *args, **kwargs):
+        """请求分发"""
         handler = getattr(self, method.lower())
         return handler(*args, **kwargs)
-
-
-req = HttpRequest()
