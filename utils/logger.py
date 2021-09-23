@@ -15,7 +15,7 @@ def init_logger():
     debug_file = os.path.join(basedir, 'logs', 'server.log')
 
     # debug
-    logger_debug = logging.getLogger('apitest')
+    logger_debug = logging.getLogger(__name__)
     handler_debug = RotatingFileHandler(debug_file,
                                         encoding='utf-8',
                                         maxBytes=20 * 1024 * 1024,

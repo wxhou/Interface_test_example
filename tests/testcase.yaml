@@ -1,5 +1,4 @@
-config: # 测试信息
-  baseurl: "https://www.zhixue.com"
+Configuration: # requests基础信息
   timeout: 30.0
   headers:
     Accept: application/json, text/javascript, */*; q=0.01
@@ -9,9 +8,9 @@ config: # 测试信息
     User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
     cookies: aliyungf_tc=AQAAANNdlkvZ2QYAIb2Q221oiyiSOfhg; tlsysSessionId=cf0a8657-4a02-4a40-8530-ca54889da838; isJump=true; deviceId=27763EA6-04F9-4269-A2D5-59BA0FB1F154; 6e12c6a9-fda1-41b3-82ec-cc496762788d=webim-visitor-69CJM3RYGHMP79F7XV2M; loginUserName=18291900215
     X-Requested-With: XMLHttpRequest
-variable:
-  none : none
-tests:
+GlobalVariable: # 全局变量
+  baseurl: "https://www.zhixue.com"
+Tests: # 测试
   test_login:
     description: "登录"
     method: post

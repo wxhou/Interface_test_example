@@ -21,8 +21,7 @@ def findalls(string: t.Text) -> t.Dict[t.Text, t.Any]:
 
 def sub_var(keys: t.Dict, string: t.Text) -> t.Text:
     """替换变量"""
-    s = Template(string)
-    res = s.safe_substitute(keys)
+    res = Template(string).safe_substitute(keys)
     logger.info("替换结果：{}".format(res))
     return res
 

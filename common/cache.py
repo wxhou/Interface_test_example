@@ -28,8 +28,8 @@ class CachePool(object):
     def __contains__(self, key: t.Text) -> bool:
         return key in self.pool
 
-    def get(self, key: t.Text) -> t.Any:
-        return self.pool.get(key)
+    def get(self, key: t.Text, default=None) -> t.Any:
+        return self.pool.get(key, default)
 
     def set(self, key: t.Text, value: t.Any=None) -> None:
         self.pool.setdefault(key, value)

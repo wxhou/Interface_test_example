@@ -48,23 +48,22 @@ class HttpRequest(Session):
         kwargs_str = dumps(kwargs)
         logger.info("request data: {}".format(kwargs))
         method = kwargs.get('method', 'GET').upper()
-        url = cache.get('baseurl') + kwargs.get('route')
+        url = cache.get('baseurl', default='') + kwargs.get('route')
         try:
             logger.info("Request Url: {}".format(url))
             logger.info("Request Method: {}".format(method))
             if is_sub := findalls(kwargs_str):
                 kwargs = loads(sub_var(is_sub, kwargs_str))
             logger.info("Request Data: {}".format(kwargs))
-            response = self.dispatch(method, url, headers=cache.get('headers'),
-                                     **kwargs.get('RequestData'), timeout=cache.get('timeout'))
-            response.timer = response.elapsed.total_seconds()
+            response = self.dispatch(method, url, **cache.get('config'),
+                                     **kwargs.get('RequestData'))
             description_html = f"""
             <font color=red>请求方法:</font>{method}<br/>
             <font color=red>请求地址:</font>{url}<br/>
             <font color=red>请求头:</font>{str(response.headers)}<br/>
             <font color=red>请求参数:</font>{json.dumps(kwargs, ensure_ascii=False)}<br/>
             <font color=red>响应状态码:</font>{str(response.status_code)}<br/>
-            <font color=red>响应时间:</font>{str(response.timer)}<br/>
+            <font color=red>响应时间:</font>{str(response.elapsed.total_seconds())}<br/>
             """
             allure.dynamic.description_html(description_html)
             logger.info("Request Result: {}".format(response))
