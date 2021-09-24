@@ -55,8 +55,8 @@ class HttpRequest(Session):
             if is_sub := findalls(kwargs_str):
                 kwargs = loads(sub_var(is_sub, kwargs_str))
             logger.info("Request Data: {}".format(kwargs))
-            response = self.dispatch(method, url, **cache.get('config'),
-                                     **kwargs.get('RequestData'))
+            request_data = HttpRequest.mergedict(kwargs.get('RequestData'), **cache.get('config'))
+            response = self.dispatch(method, url, **request_data)
             description_html = f"""
             <font color=red>请求方法:</font>{method}<br/>
             <font color=red>请求地址:</font>{url}<br/>
@@ -77,3 +77,12 @@ class HttpRequest(Session):
         """请求分发"""
         handler = getattr(self, method.lower())
         return handler(*args, **kwargs)
+
+    @staticmethod
+    def mergedict(args: t.Dict, **kwargs: t.Dict):
+        """合并字典"""
+        for k, v in args.items():
+            if k in kwargs:
+                kwargs[k] = {**args[k], **kwargs.pop(k)}
+        args.update(kwargs)
+        return args

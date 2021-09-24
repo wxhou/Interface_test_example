@@ -23,11 +23,6 @@ def init_logger():
     handler_debug.setFormatter(logger_formatter)
     logger_debug.setLevel(logging.DEBUG)
     logger_debug.addHandler(handler_debug)
-    # 在控制台输出
-    cmd_handler = logging.StreamHandler()
-    cmd_handler.setFormatter(logger_formatter)
-    cmd_handler.setLevel(logging.DEBUG)
-    logger_debug.addHandler(cmd_handler)
     return logger_debug
 
 
