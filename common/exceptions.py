@@ -1,6 +1,8 @@
 """
 异常类
 """
+from requests.exceptions import RequestException
+
 
 class YamlException(Exception):
     """Custom exception for error reporting."""

@@ -4,15 +4,15 @@
 import os
 import logging
 from logging.handlers import RotatingFileHandler
-from main import basedir
 
 
 def init_logger():
     """初始化日志"""
+    basedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    debug_file = os.path.join(basedir, 'logs', 'server.log')
 
     logger_formatter = logging.Formatter(
         '%(levelname)s %(asctime)s [%(filename)s:%(lineno)s] %(thread)d %(message)s')
-    debug_file = os.path.join(basedir, 'logs', 'server.log')
 
     # debug
     logger_debug = logging.getLogger(__name__)

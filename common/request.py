@@ -5,11 +5,11 @@ import typing as t
 import allure
 import urllib3
 from requests import Session, Response
-from requests.exceptions import RequestException
 from common.cache import cache
 from common.json import json, loads, dumps
 from common.regular import get_var, sub_var, findalls
 from utils.logger import logger
+
 
 urllib3.disable_warnings()
 
@@ -45,13 +45,13 @@ class HttpRequest(Session):
         :param cert: 如果是字符串，则为ssl客户端证书文件（.pem）的路径
         :return: request响应
         """
-        kwargs_str = dumps(kwargs)
-        logger.info("request data: {}".format(kwargs))
-        method = kwargs.get('method', 'GET').upper()
-        url = cache.get('baseurl', default='') + kwargs.get('route')
         try:
+            logger.info("request data: {}".format(kwargs))
+            method = kwargs.get('method', 'GET').upper()
+            url = cache.get('baseurl', default='') + kwargs.get('route')
             logger.info("Request Url: {}".format(url))
             logger.info("Request Method: {}".format(method))
+            kwargs_str = dumps(kwargs)
             if is_sub := findalls(kwargs_str):
                 kwargs = loads(sub_var(is_sub, kwargs_str))
             logger.info("Request Data: {}".format(kwargs))
@@ -68,8 +68,6 @@ class HttpRequest(Session):
             allure.dynamic.description_html(description_html)
             logger.info("Request Result: {}".format(response))
             return response
-        except RequestException as e:
-            logger.error(format(e))
         except self.exception as e:
             raise e
 
@@ -79,7 +77,7 @@ class HttpRequest(Session):
         return handler(*args, **kwargs)
 
     @staticmethod
-    def mergedict(args: t.Dict, **kwargs: t.Dict):
+    def mergedict(args: t.Dict, **kwargs: t.Dict) -> t.Dict:
         """合并字典"""
         for k, v in args.items():
             if k in kwargs:

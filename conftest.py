@@ -4,14 +4,13 @@ import typing as t
 import os
 import yaml
 import pytest
-import pytest
 from requests import Response
 from common.cache import cache
 from common.json import dumps, loads
 from common.request import HttpRequest
 from common.regular import findalls, sub_var
 from common.result import get_result, check_results
-from common.exceptions import YamlException
+from common.exceptions import YamlException, RequestException
 from utils.logger import logger
 
 
@@ -34,9 +33,10 @@ class YamlFile(pytest.File):
             for k, v in variable.items():
                 cache.set(k, v)
         if configuration := raw.get('Configuration'):
-            keys = findalls(dumps(configuration))
+            configuration_str = dumps(configuration)
+            keys = findalls(configuration_str)
             config = loads(sub_var({k: cache.get(k)
-                           for k in keys}, dumps(configuration)))
+                           for k in keys}, configuration_str))
             cache.set('config', config)
         if not any("Test" in key for key in raw.keys()):
             raise YamlException(os.path.basename(self.fspath), raw.keys())
@@ -54,7 +54,7 @@ class YamlTest(pytest.Item):
     def __init__(self, name, parent, spec):
         super().__init__(name, parent)
         self.spec = spec
-        self.request = HttpRequest(exception=(Exception, YamlException))
+        self.request = HttpRequest(exception=(Exception, RequestException))
 
     def runtest(self):
         # Some custom test execution (dumb example follows).
