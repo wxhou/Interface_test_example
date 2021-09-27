@@ -12,6 +12,6 @@ class YamlException(Exception):
         self.value = value
 
     def __str__(self) -> str:
-        return repr("".join(("testcase execution failed", 
+        return "".join(("testcase execution failed", 
             "spec failed: {} non testcase detail.".format(self.value),
-            "please check `{}.yaml`".format(self.basename))))
+            "please check `{}.yaml`".format(self.basename)))
